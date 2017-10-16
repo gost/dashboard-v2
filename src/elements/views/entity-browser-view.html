@@ -1,21 +1,70 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/px-data-table/px-data-table.html" />
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="../../css/app-styles.html">
+<link rel="import" href="../../bower_components/px-tabs/px-tabs.html" />
+
+<link rel="import" href="things-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
+   <style include="app-styles"></style>
+    <style>
+        .tabs-container {
+          padding-top: 12px;          
+        }
+    </style>
 
-    <px-card header-text="ENTITY BROWSER" icon="px-nav:hierarchy">
-      <h3>TEST ENTITY BROWSER</h3>
+    <div class="tabs-container">
+      <px-tabs selected="{{selected}}">
+        <px-tab >Things</px-tab>
+        <px-tab >Locations</px-tab>
+        <px-tab >Historical Locations</px-tab>
+        <px-tab >Datastreams</px-tab>
+        <px-tab >Sensors</px-tab>
+        <px-tab >Observed Properties</px-tab>
+        <px-tab >Observations</px-tab>
+        <px-tab >Features of Interest</px-tab>
+      </px-tabs>
+    </div>
+    <px-card header-text="{{headingtext}}" icon="px-nav:hierarchy">
+      <iron-pages selected="{{selected}}">
+          <things-view></things-view>
+          <div>Tab 2 content</div>
+          <div>Tab 3 content</div>
+      </iron-pages>
     </px-card>
   </template>
   <script>
     Polymer({
       is: 'entity-browser-view',
       properties: {
-       
-      }    
+        headingtext: {
+          type: String
+        },
+        test: {
+          type: Array,
+          value: [
+            {entity: "Things", label: "Things"}, 
+            {entity: "Locations", label: "Locations"}, 
+            {entity: "HistoricalLocations", label: "Historical Locations"}, 
+            {entity: "Datastreams", label: "Datastreams"}, 
+            {entity: "Sensors", label: "Sensors"}, 
+            {entity: "ObservedProperties", label: "Observed Properties"}, 
+            {entity: "Observations", label: "Observations"}, 
+            {entity: "FeaturesOfInterest", label: "Features of Interest"} ]
+        },
+        selected: {
+            type: String,
+            value: 1,
+            observer: '_selectedChanged'
+        },
+      },    
+      _selectedChanged(){
+        this.headingtext = this.test[this.selected].label;
+      }
     });
   </script>
 </dom-module>
