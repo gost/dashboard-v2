@@ -1,0 +1,131 @@
+<!-- import polymer -->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<!-- import page level css -->
+<link rel="import" href="seed-app-styles.html">
+
+<!-- app route -->
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/px-app-helpers/px-app-route/px-app-route.html">
+<link rel="import" href="../../bower_components/px-app-nav/px-app-nav.html">
+<link rel="import" href="../../bower_components/px-view/px-view.html">
+<link rel="import" href="../../bower_components/px-login/px-login.html">
+<link rel="import" href="../../bower_components/px-branding-bar/px-branding-bar.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<!-- importing icons here, to fix icon flickering problem when loading asynchronously. -->
+<link rel="import" href="../../bower_components/px-icon-set/px-icon.html">
+<link rel="import" href="../../bower_components/px-icon-set/px-icon-set.html">
+
+<link rel="import" href="../dashboard-header/dashboard-header.html">
+
+<dom-module id="seed-app">
+  <template>
+
+    <!-- apply imported seed app style module -->
+    <style include="seed-app-styles"></style>
+
+    <dashboard-header application-title="GOST dashboard"></dashboard-header>
+
+    <div class="viewport">
+      <app-location
+        route="{{route}}"
+        use-hash-as-path>
+      </app-location>
+      <px-app-route
+        id="starterAppRoute"
+        route="{{route}}"
+        use-hash-as-path
+        update-nav-route
+        nav-route="{{navRoute}}">
+      </px-app-route>
+
+      <div class="flex flex--row flex--justify">
+        <div class="u-3/4-desk u-1/1-palm">
+          <px-app-nav
+            class="navbar"
+            items="{{navItems}}"
+            selected-route="{{navRoute}}">
+          </px-app-nav>
+        </div>
+      </div>
+
+      <main role="main">
+        <px-view id="view" element-href="{{getHref(navRoute)}}" active load-async></px-view>
+      </main>
+    </div>
+
+    <iron-ajax id="configAjaxEl" url="/config" auto></iron-ajax>
+  </template>
+  <script>
+    Polymer({
+      is: 'seed-app',
+
+      properties: {
+
+        appHeader: {
+          type: String
+        },
+
+        //Global application object
+        global: {
+          type: Object,
+          value: function() {
+            return {
+              version: '1.0',
+              name: 'GOST DASHBOARD'
+            }
+          }
+        },
+
+        // Links to appear in the main navigation - px-app-nav component
+        // See https://www.predix-ui.com/#/elements/px-icon-set for available icons
+        navItems: {
+          type: Array,
+          value: function() {
+            return [
+              {
+                "label": "Home",
+                "id": "widget",
+                "icon": "px-fea:home"
+              },
+              {
+                "label": "Entity Browser",
+                "id": "entity-browser",
+                "icon": "px-fea:catalog"
+              },
+              {
+                "label": "Map",
+                "id": "map",
+                "icon": "px-utl:map"
+              }
+            ]
+          }
+        },
+
+        navRoute: {
+          type: Array,
+        }
+      },
+
+      ready: function(){
+        if (!this.$.starterAppRoute.navRoute) {
+          // set default route
+          this.$.starterAppRoute.navRoute = ['widget'];
+        }
+        // console.log('ready. route: ', this.$.starterAppRoute.navRoute);
+        this.$.configAjaxEl.addEventListener('response', function(evt) {
+          // We're getting some global config from the server.
+          // console.log('config', evt.detail.response);
+          this.$.view.elementData = evt.detail.response;
+        }.bind(this));
+      },
+
+      getHref: function(navRoute) {
+        var navRoute = this.$.starterAppRoute.navRoute || ['widget'];
+        return '/elements/views/' + navRoute[0] + '-view.html';
+      }
+
+    });
+  </script>
+</dom-module>

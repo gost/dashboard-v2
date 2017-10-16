@@ -1,0 +1,79 @@
+// Settings
+@import "px-colors-design/_settings.colors.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// px-viewport configuration variables are documented in the px-viewport Readme.md:
+// https://github.com/predixdev/px-viewport-design
+$desk-wide-width: auto; // defaults to 100%
+$desk-wide-max-width: none; // defaults to 80rem
+$viewport-margin: 0; // defaults to auto
+
+// Base
+@import "px-viewport-design/_base.viewport.scss";
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-headings-design/_base.headings.scss";
+
+// Meta
+@import "px-meta-lists-design/_meta.lists.scss";
+
+// Objects
+$inuit-enable-btn--bare     : true;
+
+@import "px-buttons-design/_objects.buttons.scss";
+
+$inuit-enable-layout--small : true;
+$inuit-enable-layout--flush : true;
+$inuit-enable-layout--full  : true;
+
+@import "px-layout-design/_objects.layout.scss";
+
+@import "../../seed-theme.scss";
+
+:root {
+  --px-app-nav-background-color: $gray19;
+  --px-app-nav-link-selected-color: #364C59;
+  --px-branding-bar-background-color: rgb(8, 41, 57);
+}
+
+px-login {
+  --px-btn-bare-color: #b7c3cd;
+}
+
+header > div.viewport {
+  margin: 0 15px;
+}
+
+main {
+  min-height: calc(100vh - #{calculateRem(120px)});
+  // margin-left: calculateRem(60px);
+  background-color: var(--px-seed-app-main-content-area-background-color, $px-page-main-content-area-background-color);
+  overflow-x: hidden;
+  flex: 1;
+}
+
+px-app-nav {
+  z-index: 5;
+}
+
+// Trumps
+$inuit-enable-margins--tiny             : true;
+$inuit-enable-margins--small            : true;
+$inuit-enable-margins--large            : true;
+$inuit-enable-margins--huge             : true;
+$inuit-enable-margins--none             : true;
+$inuit-enable-margins--rtl              : true;
+$inuit-enable-margins--negative-tiny    : true;
+$inuit-enable-paddings                  : true;
+$inuit-enable-paddings--tiny            : true;
+$inuit-enable-paddings--small           : true;
+$inuit-enable-paddings--large           : true;
+$inuit-enable-paddings--huge            : true;
+$inuit-enable-paddings--none            : true;
+
+@import "px-spacing-design/_trumps.spacing.scss";
+@import "px-widths-design/_trumps.widths.scss";
+@import "px-widths-responsive-design/_trumps.widths-responsive.scss";

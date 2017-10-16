@@ -1,0 +1,13 @@
+node_modules
+src/bower_components
+src/index.html
+src/**/*-styles.html
+src/index-inline.css
+npm-debug.log
+*.log
+.DS_Store
+temp
+dist
+build
+.github/
+.vscode/
