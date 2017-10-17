@@ -1,0 +1,4 @@
+{
+    "endpoint": "http://ubuntu:8080/v1",
+    "maxEntities": 20
+}

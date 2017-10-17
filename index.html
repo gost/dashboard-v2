@@ -6,6 +6,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  <link rel="import" href="client_config.json" />
+  <link rel="import" href="src/bower_components/gost-elements/gost-settings.html">
 
   <!-- inline CSS for splash screen -->
 
@@ -35,7 +37,8 @@
    and a "Flash of No Content"
 -->
 <body class="loading">
-
+  <gost-settings></gost-settings>
+  
   <!-- Elements wait on the page and are upgraded after elements.html is loaded. -->
   <seed-app></seed-app>
 

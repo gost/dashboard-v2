@@ -2,21 +2,29 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../../bower_components/gost-elements/gost-entity-things.html">
+<link rel="import" href="../controls/st-table.html">
 
 <dom-module id="things-view">
   <template>
-      <h3>TEST THING VIEW</h3>
-      <template is="dom-repeat" items="{{things}}">
-        <p><span>{{item.name}}</span> - <span>{{item.description}}</span></p>
-      </template>
-      <gost-entity-things id="thingelement" collection="{{things}}"></gost-entity-things>
+      <h3>THINGS</h3>
+      <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="20"><st-table>
+      <gost-entity-things id="thingelement" collection="{{things}}" count="{{count}}" odata="{{odata}}"></gost-entity-things>
   </template>
   <script>
     Polymer({
       is: 'things-view',
       properties: {
-        things:{
-          type: Array
+        things: {
+          type: Array,
+          notify: true
+        },
+        count: {
+          type: Number,
+          notify: true
+        },
+        odata: {
+          type: Object,
+          value: { count: true }
         }
       },
       load(){
