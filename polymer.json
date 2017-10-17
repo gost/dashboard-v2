@@ -1,5 +1,5 @@
 {
-  "entrypoint": "src/index.html",
+  "entrypoint": "index.html",
   "shell": "src/elements/seed-app/seed-app.html",
   "fragments": [
     "src/elements/views/widget-view.html",

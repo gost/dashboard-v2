@@ -9,14 +9,12 @@ cd dashboard-v2
 
 ## Install the dependencies
 ```
-npm install
 npm install -g polymer-cli
 bower install
 ```
 
 ## Running the app locally
 ```
-cd src
 polymer serve --hostname 0.0.0.0
 ```
 

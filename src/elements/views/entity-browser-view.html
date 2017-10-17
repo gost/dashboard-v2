@@ -31,7 +31,7 @@
     </div>
     <px-card header-text="{{headingtext}}" icon="px-nav:hierarchy">
       <iron-pages selected="{{selected}}">
-          <things-view></things-view>
+          <things-view id="thingview"></things-view>
           <div>Tab 2 content</div>
           <div>Tab 3 content</div>
       </iron-pages>
@@ -64,6 +64,7 @@
       },    
       _selectedChanged(){
         this.headingtext = this.test[this.selected].label;
+        this.$.thingview.load();
       }
     });
   </script>

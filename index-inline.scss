@@ -8,7 +8,7 @@
 @import "px-normalize-design/_generic.normalize.scss";
 
 // Base
-$inuit-webfont-path: "/bower_components/px-typography-design/type";
+$inuit-webfont-path: "src/bower_components/px-typography-design/type";
 @import "px-typography-design/_base.typography.scss";
 @import "px-headings-design/_base.headings.scss";
 
