@@ -36,16 +36,8 @@
 -->
 <body class="loading">
 
-  <!-- #splash div outside of Polymer/imports and styled by the main page.
-       First paint is instant, even on polyfilled browsers. -->
-  <div id="splash"></div>
-
   <!-- Elements wait on the page and are upgraded after elements.html is loaded. -->
   <seed-app></seed-app>
-
-  <!-- Inline script to load app and remove splash screen
-       Gulp will inline this script via the compile.index task -->
-  <script>!function(){var e=function(){var e=document.querySelector("#main-element-import");e["import"]&&"complete"===e["import"].readyState?n():e.addEventListener("load",n)},n=function(){var e=document.getElementById("splash");e.parentNode.removeChild(e),window.Px=window.Px||{},window.Px.vis=window.Px.vis||{},window.Px.vis.workerUrl="../../bower_components/px-vis/px-vis-worker.js",window.Px.vis.workerD3Url="../../bower_components/pxd3/d3.min.js"};if("registerElement"in document&&"import"in document.createElement("link")&&"content"in document.createElement("template"))e();else{var o=document.createElement("script");o.async=!0,o.src="../../bower_components/webcomponentsjs/webcomponents-lite.min.js",o.onload=e,document.head.appendChild(o)}}();</script>
 
 </body>
 </html>

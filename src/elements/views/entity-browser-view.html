@@ -29,9 +29,9 @@
         <px-tab >Features of Interest</px-tab>
       </px-tabs>
     </div>
-    <px-card header-text="{{headingtext}}" icon="px-nav:hierarchy">
+    <px-card>
       <iron-pages selected="{{selected}}">
-          <things-view id="thingview"></things-view>
+          <things-view id="thingsview"></things-view>
           <div>Tab 2 content</div>
           <div>Tab 3 content</div>
       </iron-pages>
@@ -44,27 +44,18 @@
         headingtext: {
           type: String
         },
-        test: {
-          type: Array,
-          value: [
-            {entity: "Things", label: "Things"}, 
-            {entity: "Locations", label: "Locations"}, 
-            {entity: "HistoricalLocations", label: "Historical Locations"}, 
-            {entity: "Datastreams", label: "Datastreams"}, 
-            {entity: "Sensors", label: "Sensors"}, 
-            {entity: "ObservedProperties", label: "Observed Properties"}, 
-            {entity: "Observations", label: "Observations"}, 
-            {entity: "FeaturesOfInterest", label: "Features of Interest"} ]
-        },
         selected: {
             type: String,
-            value: 1,
+            value: 0,
             observer: '_selectedChanged'
         },
       },    
       _selectedChanged(){
-        this.headingtext = this.test[this.selected].label;
-        this.$.thingview.load();
+        switch(this.selected) {
+          case 0:
+            this.$.thingsview.load();
+            break;
+        }        
       }
     });
   </script>

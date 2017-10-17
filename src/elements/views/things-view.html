@@ -1,23 +1,26 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/gost-elements/gost-entity-things.html">
 
 <dom-module id="things-view">
   <template>
       <h3>TEST THING VIEW</h3>
+      <template is="dom-repeat" items="{{things}}">
+        <p><span>{{item.name}}</span> - <span>{{item.description}}</span></p>
+      </template>
+      <gost-entity-things id="thingelement" collection="{{things}}"></gost-entity-things>
   </template>
   <script>
     Polymer({
       is: 'things-view',
       properties: {
-       
+        things:{
+          type: Array
+        }
       },
-      ready(){
-
-      },    
       load(){
-
+        this.$.thingelement.get();
       }
     });
   </script>

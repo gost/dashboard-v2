@@ -17,6 +17,7 @@
 <link rel="import" href="../../bower_components/px-icon-set/px-icon.html">
 <link rel="import" href="../../bower_components/px-icon-set/px-icon-set.html">
 
+<link rel="import" href="../../bower_components/gost-elements/gost-settings.html">
 <link rel="import" href="../dashboard-header/dashboard-header.html">
 
 <dom-module id="seed-app">
@@ -30,12 +31,13 @@
     <div class="viewport">
       <app-location
         route="{{route}}"
-        use-hash-as-path>
+        use-hash-as-path
+        >
       </app-location>
       <px-app-route
         id="starterAppRoute"
-        route="{{route}}"
         use-hash-as-path
+        route="{{route}}"
         update-nav-route
         nav-route="{{navRoute}}">
       </px-app-route>
@@ -56,6 +58,7 @@
     </div>
 
     <iron-ajax id="configAjaxEl" url="/config" auto></iron-ajax>
+    <gost-settings></gost-settings>
   </template>
   <script>
     Polymer({
@@ -78,8 +81,6 @@
           }
         },
 
-        // Links to appear in the main navigation - px-app-nav component
-        // See https://www.predix-ui.com/#/elements/px-icon-set for available icons
         navItems: {
           type: Array,
           value: function() {
@@ -113,17 +114,11 @@
           // set default route
           this.$.starterAppRoute.navRoute = ['widget'];
         }
-        // console.log('ready. route: ', this.$.starterAppRoute.navRoute);
-        this.$.configAjaxEl.addEventListener('response', function(evt) {
-          // We're getting some global config from the server.
-          // console.log('config', evt.detail.response);
-          this.$.view.elementData = evt.detail.response;
-        }.bind(this));
       },
 
       getHref: function(navRoute) {
         var navRoute = this.$.starterAppRoute.navRoute || ['widget'];
-        return 'src/elements/views/' + navRoute[0] + '-view.html';
+        return '/src/elements/views/' + navRoute[0] + '-view.html';
       }
 
     });
