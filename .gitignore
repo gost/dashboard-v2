@@ -1,8 +1,9 @@
 node_modules
-src/bower_components
-src/index.html
-src/**/*-styles.html
-src/index-inline.css
+public/bower_components
+public/index.html
+public/*-styles.html
+public/**/*-styles.html
+public/index-inline.css
 npm-debug.log
 *.log
 .DS_Store

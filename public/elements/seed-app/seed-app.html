@@ -56,7 +56,6 @@
       </main>
     </div>
 
-    <iron-ajax id="configAjaxEl" url="/config" auto></iron-ajax>
   </template>
   <script>
     Polymer({
@@ -116,7 +115,7 @@
 
       getHref: function(navRoute) {
         var navRoute = this.$.starterAppRoute.navRoute || ['widget'];
-        return '/src/elements/views/' + navRoute[0] + '-view.html';
+        return '/elements/views/' + navRoute[0] + '-view.html';
       }
 
     });

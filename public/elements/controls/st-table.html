@@ -37,11 +37,12 @@
 
         <div class="paginationContainer">
             
-            <span class="pagesize  u-mr+">
+            <!-- Disable choosing row size for now -->
+           <!-- <span class="pagesize  u-mr+">
                 <span class="rowsPerPage u-mr--">Rows per page</span>
                 <px-dropdown selected="{{top}}" display-value="{{top}}" select-by="val" button-style="bare--primary" 
                 items='{{dropdownvalues}}' disable-clear></px-dropdown>
-            </span> 
+            </span> -->
             
             <div>
                 <span class="summary">
@@ -104,7 +105,7 @@
         },
         _calculatePaging(){
             this.firstItemIndexToDisplay = this.skip;
-            this.lastItemIndexToDisplay = Number(this.count) < Number(this.top) ? Number(this.count) : Number(this.top) + Number(this.skip);
+            this.lastItemIndexToDisplay = Number(this.count) < Number(this.top) ? Number(this.count) : (Number(this.top) + Number(this.skip)) > Number(this.count) ? this.count : Number(this.top) + Number(this.skip);
             this.pageCount = Math.ceil(this.count / this.top);
             this.currentPage = Math.ceil((this.skip / this.top) + 1);      
         },
@@ -121,16 +122,19 @@
         },
         goToNextPage(){
             this.skip = this.skip + this.top;
-            this.request();
+            this._triggerRequest();
         },
         goToPreviousPage(){
             this.skip = this.skip - this.top;
-            this.request();
+            this._triggerRequest();
         },
         _goToPage(evt){
             var page = parseInt(evt.target.textContent);
             this.skip = (page - 1) * this.top;
-            this.request();
+            this._triggerRequest();
+        },
+        _triggerRequest(){
+            this.dispatchEvent(new CustomEvent('request', { detail: { top: this.top, skip: this.skip}, bubbles: true }));
         },
         _getPageupClass(currentPage) {
             return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');

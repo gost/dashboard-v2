@@ -13,7 +13,8 @@
    <style include="app-styles"></style>
     <style>
         .tabs-container {
-          padding-top: 12px;          
+          padding-top: 12px;   
+          background: #111F27;       
         }
     </style>
 
@@ -29,13 +30,13 @@
         <px-tab >Features of Interest</px-tab>
       </px-tabs>
     </div>
-    <px-card>
-      <iron-pages selected="{{selected}}">
-          <things-view id="thingsview"></things-view>
-          <div>Tab 2 content</div>
-          <div>Tab 3 content</div>
-      </iron-pages>
-    </px-card>
+
+    <iron-pages selected="{{selected}}">
+        <things-view id="thingsview"></things-view>
+        <div>Tab 2 content</div>
+        <div>Tab 3 content</div>
+    </iron-pages>
+
   </template>
   <script>
     Polymer({

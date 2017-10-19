@@ -2,13 +2,15 @@
 @import "seed-theme.scss";
 
 // Settings
+@import "px-colors-design/_settings.colors.scss";
+
 // Tools
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
 
 // Base
-$inuit-webfont-path: "src/bower_components/px-typography-design/type";
+$inuit-webfont-path: "/bower_components/px-typography-design/type";
 @import "px-typography-design/_base.typography.scss";
 @import "px-headings-design/_base.headings.scss";
 

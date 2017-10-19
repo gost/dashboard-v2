@@ -1,0 +1,81 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-deck.html">
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-things.html">
+<link rel="import" href="../controls/st-table.html">
+
+<link rel="import" href="things-view-styles.html">
+
+<dom-module id="things-view">
+  <template>
+    <style include="things-view-styles"></style>      
+    <style>       
+          :host {
+            --px-card-background-color: #111F27;
+          }
+          .card {
+            margin-top: 12px;
+            margin-left: 12px;
+            margin-right: 12px;
+          }
+    </style>   
+    <px-deck>
+
+      <px-card class="card" header-text="SEARCH FOR THINGS" icon="px-nav:search">
+          <label for="input1" >name</label>
+          <input class="text-input" id="input1" type="text" placeholder="NAME">          
+          <label for="input2" >description</label>
+          <input class="text-input" id="input2" type="text" placeholder="Type something...">          
+      </px-card>
+
+      <px-card class="card" header-text="DATA" icon="px-nav:list-view">
+        <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="{{top}}" on-request="_tableDataRequest"><st-table>
+      </px-card>   
+    </px-deck>   
+    <st-entity-things id="thingselement" collection="{{things}}" count="{{count}}" top="{{top}}" odata="{{odata}}"></st-entity-things>
+  </template>
+  <script>
+    Polymer({
+      is: 'things-view',
+      properties: {
+        things: {
+          type: Array,
+          notify: true
+        },
+        odata: {
+          type: Object,
+          value: { count: true }
+        },
+        top: {
+          type: Number,
+          value: 10,
+          observer: '_topChanged'          
+        },
+        count: {
+          type: Number,
+          notify: true
+        }
+      },
+      _topChanged(top){
+        this.odata.top = top;
+      },
+      _tableDataRequest(event){
+        this.odata.count = false;
+        this.odata.top = event.detail.top;
+        this.odata.skip = event.detail.skip;
+        this.request();
+      },
+      load(){
+        if(!this.loaded){
+          this.request();
+          this.loaded = true;
+        }
+      },
+      request(){
+        this.$.thingselement.get();
+      }
+    });
+  </script>
+</dom-module>
