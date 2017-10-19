@@ -5,8 +5,7 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-things.html">
 <link rel="import" href="../controls/st-table.html">
-
-<link rel="import" href="things-view-styles.html">
+<link rel="import" href="../controls/st-filter.html">
 
 <dom-module id="things-view">
   <template>
@@ -16,18 +15,13 @@
             --px-card-background-color: #111F27;
           }
           .card {
-            margin-top: 12px;
-            margin-left: 12px;
-            margin-right: 12px;
+
           }
     </style>   
     <px-deck>
 
       <px-card class="card" header-text="SEARCH FOR THINGS" icon="px-nav:search">
-          <label for="input1" >name</label>
-          <input class="text-input" id="input1" type="text" placeholder="NAME">          
-          <label for="input2" >description</label>
-          <input class="text-input" id="input2" type="text" placeholder="Type something...">          
+        <st-filter></st-filter>
       </px-card>
 
       <px-card class="card" header-text="DATA" icon="px-nav:list-view">
