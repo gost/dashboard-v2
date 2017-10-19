@@ -9,13 +9,18 @@ cd dashboard-v2
 
 ## Install the dependencies
 ```
-npm install -g polymer-cli
+npm install
 bower install
 ```
 
 ## Running the app locally
 ```
-polymer serve --hostname 0.0.0.0
+gulp
 ```
 
-Browse to http://localhost:8081.
+## Build for distribution
+```
+gulp dist
+```
+
+Browse to http://localhost:5000
