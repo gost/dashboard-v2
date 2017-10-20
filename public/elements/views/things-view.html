@@ -24,7 +24,7 @@
       <px-accordion icons='{"more":"px-utl:chevron-right","less":"px-utl:chevron","action":"px-utl:search"}' header-value="Filter" show-action status="{{filter}}">
         <st-filter type="thing" filter="{{filter}}" on-filter="_filter"></st-filter>
       </px-accordion>
-      <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="{{top}}" skip="{{skip}}" on-request="_tableDataRequest"><st-table>
+      <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="{{top}}" skip="{{skip}}" on-request="_tableDataRequest" on-px-table-row-tap="_rowSelected"><st-table>
     </px-card>   
 
     <st-entity-things id="thingselement" collection="{{things}}" count="{{count}}" odata="{{odata}}"></st-entity-things>
@@ -81,6 +81,9 @@
                 this.odata.count = true;
                 this.odata.filter = evt.detail.filter;
                 this.request();
+            },
+            _rowSelected(evt) {
+                alert(evt.srcElement.name);
             },
             load() {
                 if (!this.loaded) {
