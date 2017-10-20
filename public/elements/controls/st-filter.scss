@@ -1,4 +1,6 @@
 @import "px-defaults-design/_settings.defaults.scss";
-
+$inuit-enable-input--tiny: true;
+$inuit-enable-input--small: true;
+$inuit-enable-input--regular: true;
 @import "px-forms-design/_base.forms.scss";
 @import "px-buttons-design/_objects.buttons.scss";

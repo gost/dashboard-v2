@@ -1,211 +1,249 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../../bower_components/px-data-table/px-data-table.html">
-<link rel="import" href="../../bower_components/px-data-table/css/px-data-table-styles.html"/>
-<link rel="import" href="st-search.html">
+<link rel="import" href="../../bower_components/px-table-view/px-table-view.html">
+<link rel="import" href="../../bower_components/px-data-table/css/px-data-table-styles.html" />
 
 <dom-module id="st-table">
     <template>
+        <style>
+            :host{
+                --px-table-row-label--left: {
+                    flex: 0 0 0px;
+                }
+            }
+        </style>
         <style include="aha-table-styles"></style>
 
-        <px-data-table
-            table-data='{{result}}'
-            language='en'
-            buble-event
-            page-size='{{top}}'
-            hide-pagination-control>             
-            <px-data-table-column name="@iot.id" label="id" ></px-data-table-column>
+        <px-table-view>
             <template is="dom-if" if='{{_showColumns(type, "things")}}'>
-                <px-data-table-column name="name" ></px-data-table-column>
-                <px-data-table-column name="description"></px-data-table-column>
-                <px-data-table-column name="properties" max-column-character-width="30" ellipsis-clip-position="right"></px-data-table-column>                
-            </template>
-            <template is="dom-if" if='{{_showColumns(type, "observations")}}'>
-                <px-data-table-column name="result" ></px-data-table-column>
-                <px-data-table-column name="phenomenonTime" label="phenomenon time"></px-data-table-column>
-                <px-data-table-column name="resultTime" label="result time"></px-data-table-column>                
-            </template>
-            <template is="dom-if" if='{{_showColumns(type, "datastreams")}}'>
-                <px-data-table-column name="name" ></px-data-table-column>
-                <px-data-table-column name="description" ></px-data-table-column>
-                <px-data-table-column name="unitOfMeasurement" label="UOM"></px-data-table-column>                
-                <px-data-table-column name="observationType" label="observation type"></px-data-table-column>   
-                <px-data-table-column name="observedArea" label="area"></px-data-table-column>                
-                <px-data-table-column name="phenomenonTime" label="phenomenon time"></px-data-table-column>                
-                <px-data-table-column name="resultTime" label="result time"></px-data-table-column>                
-            </template>
-        </px-data-table>
+                <template is="dom-repeat" items="{{result}}">                
+                        <px-table-row
+                            tappable
+                            fit-underlay
+                            title="{{item.name}}"
+                            body="{{item.description}}"
+                            label-left="{{_getID(item)}}" 
+                            icon-right="px-utl:chevron-right"
+                            icon-size="22">
+                        </px-table-row>                
+                </template>
+    </template>
+    </px-table-view>
 
-        <div class="paginationContainer">
-            
-            <!-- Disable choosing row size for now -->
-           <!-- <span class="pagesize  u-mr+">
+    <div class="paginationContainer">
+
+        <!-- Disable choosing row size for now -->
+        <!-- <span class="pagesize  u-mr+">
                 <span class="rowsPerPage u-mr--">Rows per page</span>
                 <px-dropdown selected="{{top}}" display-value="{{top}}" select-by="val" button-style="bare--primary" 
                 items='{{dropdownvalues}}' disable-clear></px-dropdown>
             </span> -->
-            
-            <div>
-                <span class="summary">
+
+        <div>
+            <span class="summary">
                     <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
                     <span>of</span>
-                    <span>{{count}}</span>
-                </span>
-                <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
+            <span>{{count}}</span>
+            </span>
+            <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
                     <px-icon icon="px-nav:back"></px-icon>
                 </button>
-                <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
+            <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
                     <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
                 </template>
-                <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
+            <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
                     <px-icon icon="px-nav:next"></px-icon>
                 </button>
-            </div>            
         </div>
+    </div>
     </template>
-  
-  <script>
-    Polymer({
-        is: 'st-table',
-        properties: {
-            baseurl: { 
-                type: String                
-            },
-            endpoint: { 
-                type: String 
-            },
-            count: { 
-                type: Number,
-                observer: '_calculatePaging'
-            },
-            top: { 
-                type: Number,
-                observer: '_calculatePaging'
-            },
-            skip: {
-                type: Number,
-                value: 0,
-                observer: '_calculatePaging'
-            },
-            dropdownvalues: {
-                type: Array,
-                value: [{"key": "1", "val": "5"}, {"key": "2", "val": "10"}, {"key": "3", "val": "15"}, {"key": "4", "val": "20"}]
-            },
-            type: { // things, datastreams, locations, historicallocations, sensors, observedproperties, observations, featuresofinterest
-                type: String
-            },
-            tabledata: {
-                type: Array,                
-                notify: true,
-                observer: '_tableDataChanged'
-            },
-            result: {
-                type: Array,                
-                notify: true,
-            }
-        },
-        _calculatePaging(){
-            this.firstItemIndexToDisplay = this.skip;
-            this.lastItemIndexToDisplay = Number(this.count) < Number(this.top) ? Number(this.count) : (Number(this.top) + Number(this.skip)) > Number(this.count) ? this.count : Number(this.top) + Number(this.skip);
-            this.pageCount = Math.ceil(this.count / this.top);
-            this.currentPage = Math.ceil((this.skip / this.top) + 1);      
-        },
-        _tableDataChanged(tabledata){   
-            this.result = this.tabledata.map(d=>{
-                if(d.properties){
-                    d.properties = JSON.stringify(d.properties);
-                }
-                return d; 
-            });
-        },
-        _showColumns(type1, type2) {
-            return type1 == type2;
-        },
-        goToNextPage(){
-            this.skip = this.skip + this.top;
-            this._triggerRequest();
-        },
-        goToPreviousPage(){
-            this.skip = this.skip - this.top;
-            this._triggerRequest();
-        },
-        _goToPage(evt){
-            var page = parseInt(evt.target.textContent);
-            this.skip = (page - 1) * this.top;
-            this._triggerRequest();
-        },
-        _triggerRequest(){
-            this.dispatchEvent(new CustomEvent('request', { detail: { top: this.top, skip: this.skip}, bubbles: true }));
-        },
-        _getPageupClass(currentPage) {
-            return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');
-        },        
-        _getPagedownClass(currentPage, pageCount) {
-            return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn--bare'].join(' ');
-        },
-        _getPagerButtonClass(buttonValue, currentPage) {
-            var classList = ['btn'];
-            if(buttonValue === currentPage) {
-                classList.push('btn--tertiary u-ml');
-            }
-            else {
-                classList.push('btn--bare');
-            }
-            return classList.join(' ');
-        },
-        _pagerButtons: function() {
-            if(this.pageCount) {
-                var noOfPagerButtons = 0,
-                pagerNavButtonsConfig = [],
-                i;
 
-                // if less than 9 pages, display all buttons
-                if(this.pageCount <= 9) {
-                noOfPagerButtons = this.pageCount;
-                pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
-                    function(val, index) {
-                    return {val: index + 1};
-                    });
+    <script>
+        Polymer({
+            is: 'st-table',
+            properties: {
+                baseurl: {
+                    type: String
+                },
+                endpoint: {
+                    type: String
+                },
+                count: {
+                    type: Number,
+                    observer: '_calculatePaging'
+                },
+                top: {
+                    type: Number,
+                    observer: '_calculatePaging'
+                },
+                skip: {
+                    type: Number,
+                    value: 0,
+                    observer: '_calculatePaging'
+                },
+                dropdownvalues: {
+                    type: Array,
+                    value: [{
+                        "key": "1",
+                        "val": "5"
+                    }, {
+                        "key": "2",
+                        "val": "10"
+                    }, {
+                        "key": "3",
+                        "val": "15"
+                    }, {
+                        "key": "4",
+                        "val": "20"
+                    }]
+                },
+                type: { // things, datastreams, locations, historicallocations, sensors, observedproperties, observations, featuresofinterest
+                    type: String
+                },
+                tabledata: {
+                    type: Array,
+                    notify: true,
+                    observer: '_tableDataChanged'
+                },
+                result: {
+                    type: Array,
+                    notify: true,
                 }
-                // if near end, show final pages
-                else if(this.pageCount <= this.currentPage + 3) {
-                    pagerNavButtonsConfig.push({val: 1});
-                    pagerNavButtonsConfig.push({val: '...'});
-
-                    for(i = this.pageCount - 6; i <= this.pageCount; i++) {
-                        pagerNavButtonsConfig.push({val: i});
+            },
+            _getID(obj) {
+                return obj['@iot.id'];
+            },
+            _calculatePaging() {
+                this.firstItemIndexToDisplay = this.skip;
+                this.lastItemIndexToDisplay = Number(this.count) < Number(this.top) ? Number(this.count) : (Number(this.top) + Number(this.skip)) > Number(this.count) ? this.count : Number(this.top) + Number(this.skip);
+                this.pageCount = Math.ceil(this.count / this.top);
+                this.currentPage = Math.ceil((this.skip / this.top) + 1);
+            },
+            _tableDataChanged(tabledata) {
+                this.result = this.tabledata.map(d => {
+                    if (d.properties) {
+                        d.properties = JSON.stringify(d.properties);
                     }
+                    return d;
+                });
+            },
+            _showColumns(type1, type2) {
+                return type1 == type2;
+            },
+            goToNextPage() {
+                this.skip = this.skip + this.top;
+                this._triggerRequest();
+            },
+            goToPreviousPage() {
+                this.skip = this.skip - this.top;
+                this._triggerRequest();
+            },
+            _goToPage(evt) {
+                var page = parseInt(evt.target.textContent);
+                this.skip = (page - 1) * this.top;
+                this._triggerRequest();
+            },
+            _triggerRequest() {
+                this.dispatchEvent(new CustomEvent('request', {
+                    detail: {
+                        top: this.top,
+                        skip: this.skip
+                    },
+                    bubbles: true
+                }));
+            },
+            _getPageupClass(currentPage) {
+                return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');
+            },
+            _getPagedownClass(currentPage, pageCount) {
+                return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn--bare'].join(' ');
+            },
+            _getPagerButtonClass(buttonValue, currentPage) {
+                var classList = ['btn'];
+                if (buttonValue === currentPage) {
+                    classList.push('btn--tertiary u-ml');
+                } else {
+                    classList.push('btn--bare');
                 }
-                // if somewhere in beginning/middle, show pages around where we are
-                else {
-                    if(this.currentPage <= 5) {
-                        pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
-                        function(val, index) {
-                            return {val: index + 1};
+                return classList.join(' ');
+            },
+            _pagerButtons: function() {
+                if (this.pageCount) {
+                    var noOfPagerButtons = 0,
+                        pagerNavButtonsConfig = [],
+                        i;
+
+                    // if less than 9 pages, display all buttons
+                    if (this.pageCount <= 9) {
+                        noOfPagerButtons = this.pageCount;
+                        pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
+                            function(val, index) {
+                                return {
+                                    val: index + 1
+                                };
+                            });
+                    }
+                    // if near end, show final pages
+                    else if (this.pageCount <= this.currentPage + 3) {
+                        pagerNavButtonsConfig.push({
+                            val: 1
                         });
-                        pagerNavButtonsConfig.push({val: '...'});
-                        pagerNavButtonsConfig.push({val: this.pageCount});
-                    }
-                    else {
-                        pagerNavButtonsConfig.push({val: 1});
-                        pagerNavButtonsConfig.push({val: '...'});
-                        for(i = this.currentPage - 3; i < this.currentPage + 2; i++) {
-                        pagerNavButtonsConfig.push({val: i});
+                        pagerNavButtonsConfig.push({
+                            val: '...'
+                        });
+
+                        for (i = this.pageCount - 6; i <= this.pageCount; i++) {
+                            pagerNavButtonsConfig.push({
+                                val: i
+                            });
                         }
-                        pagerNavButtonsConfig.push({val: '...'});
-                        pagerNavButtonsConfig.push({val: this.pageCount});
                     }
+                    // if somewhere in beginning/middle, show pages around where we are
+                    else {
+                        if (this.currentPage <= 5) {
+                            pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
+                                function(val, index) {
+                                    return {
+                                        val: index + 1
+                                    };
+                                });
+                            pagerNavButtonsConfig.push({
+                                val: '...'
+                            });
+                            pagerNavButtonsConfig.push({
+                                val: this.pageCount
+                            });
+                        } else {
+                            pagerNavButtonsConfig.push({
+                                val: 1
+                            });
+                            pagerNavButtonsConfig.push({
+                                val: '...'
+                            });
+                            for (i = this.currentPage - 3; i < this.currentPage + 2; i++) {
+                                pagerNavButtonsConfig.push({
+                                    val: i
+                                });
+                            }
+                            pagerNavButtonsConfig.push({
+                                val: '...'
+                            });
+                            pagerNavButtonsConfig.push({
+                                val: this.pageCount
+                            });
+                        }
+                    }
+                    return pagerNavButtonsConfig;
                 }
-                return pagerNavButtonsConfig;
+            },
+            ready() {
+                this.firstItemIndexToDisplay = 0;
+                this.lastItemIndexToDisplay = this.top;
+                this.count = 0;
+                this.pageCount = 0;
+                this.currentPage = 0;
             }
-        },
-        ready(){         
-            this.firstItemIndexToDisplay = 0;
-            this.lastItemIndexToDisplay = this.top;
-            this.count = 0;
-            this.pageCount = 0;
-            this.currentPage = 0;
-        }
-    });
-  </script>
+        });
+    </script>
 </dom-module>
