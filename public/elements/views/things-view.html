@@ -24,10 +24,10 @@
       <px-accordion icons='{"more":"px-utl:chevron-right","less":"px-utl:chevron","action":"px-utl:search"}' header-value="Filter" show-action status="{{filter}}">
         <st-filter type="thing" filter="{{filter}}" on-filter="_filter"></st-filter>
       </px-accordion>
-      <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="{{top}}" on-request="_tableDataRequest"><st-table>
+      <st-table id="table" type="things" count="{{count}}" tabledata="[[things]]" top="{{top}}" skip="{{skip}}" on-request="_tableDataRequest"><st-table>
     </px-card>   
 
-    <st-entity-things id="thingselement" collection="{{things}}" count="{{count}}" top="{{top}}" odata="{{odata}}"></st-entity-things>
+    <st-entity-things id="thingselement" collection="{{things}}" count="{{count}}" odata="{{odata}}"></st-entity-things>
   </template>
     <script>
         Polymer({
@@ -40,13 +40,21 @@
                 odata: {
                     type: Object,
                     value: {
+                        skip: 0,
                         count: true
                     }
                 },
                 top: {
                     type: Number,
                     value: 10,
+                    notify: true,
                     observer: '_topChanged'
+                },
+                skip: {
+                    type: Number,
+                    value: 10,
+                    notify: true,
+                    observer: '_skipChanged'
                 },
                 filter: {
                     type: String
@@ -59,6 +67,9 @@
             _topChanged(top) {
                 this.odata.top = top;
             },
+            _skipChanged(skip) {
+                this.odata.skip = skip;
+            },
             _tableDataRequest(event) {
                 this.odata.count = false;
                 this.odata.top = event.detail.top;
@@ -66,6 +77,8 @@
                 this.request();
             },
             _filter(evt) {
+                this.skip = 0;
+                this.odata.count = true;
                 this.odata.filter = evt.detail.filter;
                 this.request();
             },

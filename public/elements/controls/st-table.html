@@ -32,29 +32,27 @@
     </px-table-view>
 
     <div class="paginationContainer">
-
         <!-- Disable choosing row size for now -->
         <!-- <span class="pagesize  u-mr+">
                 <span class="rowsPerPage u-mr--">Rows per page</span>
                 <px-dropdown selected="{{top}}" display-value="{{top}}" select-by="val" button-style="bare--primary" 
                 items='{{dropdownvalues}}' disable-clear></px-dropdown>
             </span> -->
-
         <div>
             <span class="summary">
-                    <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
-                    <span>of</span>
+                <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
+                <span>of</span>
             <span>{{count}}</span>
             </span>
             <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
-                    <px-icon icon="px-nav:back"></px-icon>
-                </button>
+                <px-icon icon="px-nav:back"></px-icon>
+            </button>
             <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
-                    <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
-                </template>
+                <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+            </template>
             <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
-                    <px-icon icon="px-nav:next"></px-icon>
-                </button>
+                <px-icon icon="px-nav:next"></px-icon>
+            </button>
         </div>
     </div>
     </template>
@@ -127,6 +125,7 @@
                     }
                     return d;
                 });
+                this._calculatePaging();
             },
             _showColumns(type1, type2) {
                 return type1 == type2;
