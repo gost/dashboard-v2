@@ -32,6 +32,7 @@
             </template>
     <li>
         <button class="btn btn--small" on-click="_triggerGo">submit</button>
+        <button class="btn btn--small" on-click="_triggerClear">clear</button>
     </li>
     </ul>
     </template>
@@ -54,20 +55,32 @@
                 return currentType == reqType;
             },
             _triggerGo() {
-                this.filter = "";
+                var filter = "";
+
                 switch (this.type) {
                     case "thing":
                         var id = Polymer.dom(this.root).querySelector('#thingid');
                         var name = Polymer.dom(this.root).querySelector('#thingname');
                         var description = Polymer.dom(this.root).querySelector('#thingdescription');
 
-                        var filter = "";
                         filter = this._combineFilter(filter, id.value ? "id eq '" + id.value + "'" : "");
                         filter = this._combineFilter(filter, name.value ? "contains(tolower(name), '" + name.value.toLowerCase() + "')" : "");
                         filter = this._combineFilter(filter, description.value ? "contains(tolower(description), '" + description.value.toLowerCase() + "')" : "");
-                        this.filter = filter;
+
                         break;
                 }
+
+                this.filter = filter;
+                this._fireEvent();
+            },
+            _triggerClear() {
+                Polymer.dom(this.root).querySelector('#thingid').value = "";
+                Polymer.dom(this.root).querySelector('#thingname').value = "";
+                Polymer.dom(this.root).querySelector('#thingdescription').value = "";
+                this.filter = "";
+                this._fireEvent();
+            },
+            _fireEvent() {
                 this.dispatchEvent(new CustomEvent('filter', {
                     detail: {
                         filter: this.filter
