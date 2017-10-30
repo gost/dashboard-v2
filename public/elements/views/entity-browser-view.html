@@ -6,7 +6,8 @@
 <link rel="import" href="../../css/app-styles.html">
 <link rel="import" href="../../bower_components/px-tabs/px-tabs.html" />
 
-<link rel="import" href="things-view.html" />
+<link rel="import" href="entities-view.html" />
+<link rel="import" href="thing-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -19,22 +20,28 @@
     </style>
 
     <div class="tabs-container">
-      <px-tabs selected="{{selected}}">
-        <px-tab >Things</px-tab>
-        <px-tab >Locations</px-tab>
-        <px-tab >Historical Locations</px-tab>
-        <px-tab >Datastreams</px-tab>
-        <px-tab >Sensors</px-tab>
-        <px-tab >Observed Properties</px-tab>
-        <px-tab >Observations</px-tab>
-        <px-tab >Features of Interest</px-tab>
+      <px-tabs selected="{{selectedtab}}">
+        <px-tab>Things</px-tab>
+        <px-tab>Locations</px-tab>
+        <px-tab>Historical Locations</px-tab>
+        <px-tab>Datastreams</px-tab>
+        <px-tab>Sensors</px-tab>
+        <px-tab>Observed Properties</px-tab>
+        <px-tab>Observations</px-tab>
+        <px-tab>Features of Interest</px-tab>
       </px-tabs>
     </div>
 
-    <iron-pages selected="{{selected}}">
-        <things-view id="thingsview"></things-view>
-        <div>Tab 2 content</div>
-        <div>Tab 3 content</div>
+    <iron-pages selected="{{selectedpage}}">
+        <entities-view id="thingsview" arraytype="things" selected="{{selectedthing}}"></entities-view>
+        <entities-view id="locationsview" arraytype="locations" selected="{{selectedlocation}}"></entities-view>
+        <entities-view id="historicallocationsview" arraytype="historicallocations" selected="{{selectedhistoricallocation}}"></entities-view>
+        <entities-view id="datastreamsview" arraytype="datastreams" selected="{{selecteddatastream}}"></entities-view>
+        <entities-view id="sensorsview" arraytype="sensors" selected="{{selectedsensor}}"></entities-view>
+        <entities-view id="observedpropertiesview" arraytype="observedproperties" selected="{{selectedobservedproperty}}"></entities-view>
+        <entities-view id="observationsview" arraytype="observations" selected="{{selectedobservation}}"></entities-view>
+        <entities-view id="featuresofinterestview" arraytype="featuresofinterest" selected="{{selectedfeatureofinterest}}"></entities-view>
+        <thing-view thing="{{selectedthing}}"></thing-view>
     </iron-pages>
 
   </template>
@@ -45,19 +52,102 @@
         headingtext: {
           type: String
         },
-        selected: {
+        selectedtab: {
             type: String,
             value: 0,
             observer: '_selectedChanged'
         },
+        selectedpage: {
+            type: String,
+            value: 0
+        },
+        selectedthing: {
+          type: Object,
+          observer: '_thingChanged'
+        },
+        selectedlocation: {
+          type: Object,
+          observer: '_locationChanged'
+        },
+        selectedhistoricallocation: {
+          type: Object,
+          observer: '_historicalLocationChanged'
+        },
+        selecteddatastream: {
+          type: Object,
+          observer: '_datastreamChanged'
+        },
+        selectedsensor: {
+          type: Object,
+          observer: '_sensorChanged'
+        },
+        selectedobservedproperty: {
+          type: Object,
+          observer: '_observedpropertyChanged'
+        },
+        selectedobservation: {
+          type: Object,
+          observer: '_observationChanged'
+        },
+        selectedfeatureofinterest: {
+          type: Object,
+          observer: '_featureofinterestChanged'
+        }
       },    
-      _selectedChanged(){
-        switch(this.selected) {
+      _selectedChanged(selected){
+        switch(selected) {
           case 0:
-            this.$.thingsview.load();
+            this.$.thingsview.load();            
+            break;
+          case 1:
+            this.$.locationsview.load();            
+            break;
+          case 2:
+            this.$.historicallocationsview.load();            
+            break;
+          case 3:
+            this.$.datastreamsview.load();            
+            break;
+          case 4:
+            this.$.sensorsview.load();            
+            break;
+          case 5:
+            this.$.observedpropertiesview.load();            
+            break;
+          case 6:
+            this.$.observationsview.load();            
+            break;
+          case 7:
+            this.$.featuresofinterestview.load();            
             break;
         }        
-      }
+
+        this.selectedpage = selected;
+      },
+      _thingChanged(id){
+        this.selectedpage = 8;
+      },
+      _locationChanged(id){
+        this.selectedpage = 9;
+      },
+      _historicalLocationChanged(id){
+        this.selectedpage = 10;
+      },
+      _datastreamChanged(id){
+        this.selectedpage = 11;
+      },
+      _sensorChanged(id){
+        this.selectedpage = 12;
+      },
+      _observedpropertyChanged(id){
+        this.selectedpage = 13;
+      },
+      _observationChanged(id){
+        this.selectedpage = 14;
+      },
+      _featureofinterestChanged(id){
+        this.selectedpage = 15;
+      },
     });
   </script>
 </dom-module>

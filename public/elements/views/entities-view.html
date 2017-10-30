@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-things.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-historicallocations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-sensors.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-observedproperties.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-observations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-featuresofinterest.html">
+<link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../controls/st-filter.html">
+
+<dom-module id="entities-view">
+    <template>
+    <style include="entities-view-styles"></style>      
+    <style>       
+          :host {
+            --px-card-background-color: #111F27;
+          }
+
+          .card {
+            padding-top: 20px;
+          }
+    </style>   
+
+    <px-card class="card" >
+      <px-accordion icons='{"more":"px-utl:chevron-right","less":"px-utl:chevron","action":"px-utl:search"}' header-value="Filter" show-action status="{{filter}}">
+        <st-filter type="thing" filter="{{filter}}" on-filter="_filter"></st-filter>
+      </px-accordion>
+      <st-table id="table" arraytype="{{arraytype}}" count="{{count}}" tabledata="[[entities]]" top="{{top}}" skip="{{skip}}" on-request="_tableDataRequest" on-px-table-row-tap="_rowSelected"><st-table>
+    </px-card>   
+
+    <template is="dom-if" if='{{_show(arraytype, "things")}}'>
+        <st-entity-things id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-things>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "locations")}}'>
+        <st-entity-locations id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-locations>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "historicallocations")}}'>
+        <st-entity-historicallocations id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-historicallocations>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "datastreams")}}'>
+        <st-entity-datastreams id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-datastreams>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "sensors")}}'>
+        <st-entity-sensors id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-sensors>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "observedproperties")}}'>
+        <st-entity-observedproperties id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-observedproperties>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "observations")}}'>
+        <st-entity-observations id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-observations>
+    </template>
+    <template is="dom-if" if='{{_show(arraytype, "featuresofinterest")}}'>
+        <st-entity-featuresofinterest id="st" collection="{{entities}}" count="{{count}}" odata="[[odata]]"></st-entity-featuresofinterest>
+    </template>
+  </template>
+    <script>
+        Polymer({
+            is: 'entities-view',
+            properties: {
+                entities: {
+                    type: Array,
+                    notify: true
+                },
+                arraytype: {
+                    type: String,
+                    value: "things"
+                },
+                odata: {
+                    type: Object,
+                    value: function() { 
+                        return { skip: 0, count: true }; 
+                    } 
+                },
+                top: {
+                    type: Number,
+                    value: 10,
+                    notify: true,
+                    observer: '_topChanged'
+                },
+                skip: {
+                    type: Number,
+                    value: 0,
+                    notify: true,
+                    observer: '_skipChanged'
+                },
+                filter: {
+                    type: String
+                },
+                count: {
+                    type: Number,
+                    notify: true
+                },
+                selected: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            _topChanged(top) {
+                this.odata.top = top;
+            },
+            _skipChanged(skip) {
+                this.odata.skip = skip;
+            },
+            _tableDataRequest(event) {
+                this.odata.count = false;
+                this.odata.top = event.detail.top;
+                this.odata.skip = event.detail.skip;
+                this.request();
+            },
+            _filter(evt) {
+                this.skip = 0;
+                this.odata.count = true;
+                this.odata.filter = evt.detail.filter;
+                this.request();
+            },
+            _rowSelected(evt) {
+                this.selected = evt.srcElement;
+            },
+            _show(type1, type2) {
+                return type1 == type2;
+            },
+            load() {
+                if (!this.loaded) {
+                    this.request();
+                    this.loaded = true;
+                }
+            },
+            request() {
+                this.async(function(){
+                    var st = this.querySelector('#st');
+                    var type = this.odata.type;
+                    var skip = this.odata.skip;
+                    st.get();
+                }.bind(this), 50);                
+            },
+            ready(){
+                this.odata.type = this.arraytype;
+            }
+        });
+    </script>
+</dom-module>

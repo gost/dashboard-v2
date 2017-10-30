@@ -16,7 +16,7 @@
         <style include="aha-table-styles"></style>
 
         <px-table-view>
-            <template is="dom-if" if='{{_showColumns(type, "things")}}'>
+            <template is="dom-if" if='{{_showDefault(arraytype)}}'>
                 <template is="dom-repeat" items="{{result}}">                
                         <px-table-row
                             tappable
@@ -29,7 +29,34 @@
                             icon-size="22">
                         </px-table-row>                
                 </template>
-    </template>
+            </template>
+            <template is="dom-if" if='{{_show(arraytype, "historicallocations")}}'>
+                <template is="dom-repeat" items="{{result}}">                
+                        <px-table-row
+                            tappable
+                            fit-underlay
+                            title="{{item.time}}"
+                            label-left="{{_getID(item)}}" 
+                            icon-right="px-utl:chevron-right"
+                            item="{{item}}"
+                            icon-size="22">
+                        </px-table-row>                
+                </template>
+            </template>
+            <template is="dom-if" if='{{_show(arraytype, "observations")}}'>
+                <template is="dom-repeat" items="{{result}}">                
+                        <px-table-row
+                            tappable
+                            fit-underlay
+                            title="{{item.phenomenonTime}}"
+                            body="{{item.result}}"
+                            label-left="{{_getID(item)}}" 
+                            icon-right="px-utl:chevron-right"
+                            item="{{item}}"
+                            icon-size="22">
+                        </px-table-row>                
+                </template>
+            </template>
     </px-table-view>
 
     <div class="paginationContainer">
@@ -97,7 +124,7 @@
                         "val": "20"
                     }]
                 },
-                type: { // things, datastreams, locations, historicallocations, sensors, observedproperties, observations, featuresofinterest
+                arraytype: { // things, datastreams, locations, historicallocations, sensors, observedproperties, observations, featuresofinterest
                     type: String
                 },
                 tabledata: {
@@ -128,7 +155,14 @@
                 });
                 this._calculatePaging();
             },
-            _showColumns(type1, type2) {
+            _showDefault(type) {
+                if(type == "things" || type == "locations" || type == "datastreams" || type == "sensors" || type == "observedproperties" || type == "featuresofinterest"){
+                    return true;
+                }
+
+                return false;
+            },
+            _show(type1, type2) {
                 return type1 == type2;
             },
             goToNextPage() {

@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-things.html">
+<link rel="import" href="../controls/st-table.html">
+
+<dom-module id="thing-view">
+    <template>        
+    <style>       
+          :host {
+            --px-card-background-color: #111F27;
+          }
+
+          .card {
+            padding-top: 20px;
+          }
+    </style>   
+
+    <px-card class="card" >
+      <h1>{{thing.name}}</h1>
+    </px-card>   
+
+  </template>
+    <script>
+        Polymer({
+            is: 'thing-view',
+            properties: {
+                thing: {
+                    type: Object,
+                    notify: true
+                }
+            }
+        });
+    </script>
+</dom-module>
