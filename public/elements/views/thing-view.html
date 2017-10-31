@@ -11,6 +11,7 @@
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../../css/app-styles.html" />
+<link rel="import" href="thing-view-styles.html" />
 
 <dom-module id="thing-view">
     <template>       
@@ -20,44 +21,68 @@
                 --px-card-background-color: #111F27;
             }
 
-            .card {
-                padding-top: 20px;
+            body {
+                background-color: #111F27;
             }
 
+            .card {
+                padding-top: 20px;
+                min-width: 400px;
+                padding-bottom: 2rem;
+            }
 
         </style>   
+        <style include="thing-view-styles"></style> 
         <style include="app-styles"></style> 
+        <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                              
+            <px-card class="card flex__item flex__item--top" header-text="Things({{id}})" icon="px-nav:hierarchy">                    
+                <div class="entityInfoHeader">id</div>
+                <div class="entityInfo">{{id}}</div>
+                <div class="entityInfoHeader">name</div>
+                <div class="entityInfo">{{name}}</div>
+                <div class="entityInfoHeader">description</div>
+                <div class="entityInfo">{{description}}</div>
+                <div class="entityInfoHeader">properties</div>
+                <div class="entityInfo">{{propertiesstring}}</div>
+            </px-card>   
+            <px-card class="card flex__item flex__item--top" header-text="Things({{id}})/Locations" icon="px-nav:hierarchy">
+                <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                    <div class="flex__item flex__item--top" >
+                        <template is="dom-repeat" items="{{locations}}">                
+                                <div class="entityInfoHeader">id</div>
+                                <div class="entityInfo">{{_getID(item)}}</div>
+                                <div class="entityInfoHeader">name</div>
+                                <div class="entityInfo">{{item.name}}</div>
+                                <div class="entityInfoHeader">description</div>
+                                <div class="entityInfo">{{item.description}}</div>   
+                                <div class="entityInfoHeader">encoding</div>
+                                <div class="entityInfo">{{item.encodingType}}</div>
+                                <div class="entityInfoHeader">location</div>
+                                <div class="entityInfo">{{_getLocationString(item)}}</div>      
+                        </template>
+                    </div>
 
-        <px-card class="card" header-text="Things({{id}})" icon="px-nav:hierarchy">
-            <div class="entityInfoHeader">id</div>
-            <div class="entityInfo">{{id}}</div>
-            <div class="entityInfoHeader">name</div>
-            <div class="entityInfo">{{name}}</div>
-            <div class="entityInfoHeader">description</div>
-            <div class="entityInfo">{{description}}</div>
-            <div class="entityInfoHeader">properties</div>
-            <div class="entityInfo">{{propertiesstring}}</div>
-        </px-card>   
-        <px-card class="card" header-text="Things({{id}})/Locations" icon="px-nav:hierarchy">
-            <template is="dom-repeat" items="{{locations}}">                
-                <div class="entityInfo">{{item.location}}</div>               
-            </template>
-            <div id="mapwrapper" style="height:250px; width:400px; display:flex">
-            <px-map id="map" zoom="0" lat="0" lng="0" flex-to-size>
-            <px-map-tile-layer
-                url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
-            </px-map-tile-layer>
-            <px-map-layer-geojson 
-                data="[[mapdata]]" 
-                feature-style='{"color":"#3E87E8"}' 
-                show-feature-properties>
-            </px-map-layer-geojson>
-            </px-map>
+                    
+                </div>
+            </px-card>   
+        </div>   
+        <div id="mapwrapper" style="height:200px; width:100%; display:flex" >                
+                <px-map id="map" zoom="0" lat="0" lng="0" flex-to-size disable-scroll-zoom disable-dragging>
+                <px-map-tile-layer
+                    url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
+                </px-map-tile-layer>
+                <px-map-layer-geojson 
+                    data="[[mapdata]]" 
+                    feature-style='{"color":"#3E87E8"}' 
+                    show-feature-properties>
+                </px-map-layer-geojson>
+                </px-map>
             </div>
-        </px-card>   
         <px-card class="card" header-text="Things({{id}})/Datastreams" icon="px-nav:hierarchy">
             <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
-        </px-card>          
+        </px-card> 
+          
         <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{id}}" name="{{name}}" description="{{description}}" props="{{props}}"></st-entity-thing>
         <st-entity-locations id="entitylocations" thingid="[[id]]" collection="{{locations}}"></st-entity-locations>
         <st-entity-datastreams id="entitydatastreams" thingid="[[id]]" collection="{{datastreams}}" odata="[[datastreamodata]]" count="{{datastreamcount}}"></st-entity-datastreams>
@@ -134,11 +159,17 @@
                 this.$.entitylocations.get();
                 this.$.entitydatastreams.get();
             },
+            _getID(item){
+                return item['@iot.id'];
+            },
             _tableDataRequest(event) {
                 this.datastreamodata.count = false;
                 this.datastreamodata.top = event.detail.top;
                 this.datastreamodata.skip = event.detail.skip;
                 this.$.entitydatastreams.get();
+            },
+            _getLocationString(location){
+                return JSON.stringify(location.location, null, "\t"); 
             },
             _locationsReceived(locations){   
                 if(!locations || locations.length == 0)     {
@@ -148,7 +179,7 @@
                 coordinates = locations[0].location.coordinates;
                 this.$.map.lng = coordinates[0];
                 this.$.map.lat = coordinates[1];
-                this.$.map.zoom = 15;
+                this.$.map.zoom = 16;
 
                 fc = {
                     type: "FeatureCollection",
