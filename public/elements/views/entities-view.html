@@ -134,8 +134,6 @@
             request() {
                 this.async(function(){
                     var st = this.querySelector('#st');
-                    var type = this.odata.type;
-                    var skip = this.odata.skip;
                     st.get();
                 }.bind(this), 50);                
             },

@@ -42,7 +42,7 @@
             <template is="dom-repeat" items="{{locations}}">                
                 <div class="entityInfo">{{item.location}}</div>               
             </template>
-            <div id="mapwrapper" style="height:400px; width:600px; display:flex">
+            <div id="mapwrapper" style="height:250px; width:400px; display:flex">
             <px-map id="map" zoom="0" lat="0" lng="0" flex-to-size>
             <px-map-tile-layer
                 url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
@@ -55,9 +55,12 @@
             </px-map>
             </div>
         </px-card>   
+        <px-card class="card" header-text="Things({{id}})/Datastreams" icon="px-nav:hierarchy">
+            <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
+        </px-card>          
         <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{id}}" name="{{name}}" description="{{description}}" props="{{props}}"></st-entity-thing>
         <st-entity-locations id="entitylocations" thingid="[[id]]" collection="{{locations}}"></st-entity-locations>
-        <st-entity-datastreams id="entitydatastreams" thingid="[[id]]" collection="{{datastreams}}"></st-entity-datastreams>
+        <st-entity-datastreams id="entitydatastreams" thingid="[[id]]" collection="{{datastreams}}" odata="[[datastreamodata]]" count="{{datastreamcount}}"></st-entity-datastreams>
     </template>
 
     <script>
@@ -102,6 +105,26 @@
                 mapdata: {
                     type: Object,
                     notify: true
+                },
+                datastreamodata: {
+                    type: Object,
+                    value: function() { 
+                        return { skip: 0, count: true, top: 10 }; 
+                    } 
+                },
+                datastreamcount: {
+                    type: Number,
+                    notify: true
+                },
+                datastreamtop: {
+                    type: Number,
+                    value: 10,
+                    notify: true
+                },
+                datastreamskip: {
+                    type: Number,
+                    value: 0,
+                    notify: true
                 }
             },
             _propsSet(props){                
@@ -109,6 +132,12 @@
             },
             _idSet(id){
                 this.$.entitylocations.get();
+                this.$.entitydatastreams.get();
+            },
+            _tableDataRequest(event) {
+                this.datastreamodata.count = false;
+                this.datastreamodata.top = event.detail.top;
+                this.datastreamodata.skip = event.detail.skip;
                 this.$.entitydatastreams.get();
             },
             _locationsReceived(locations){   
