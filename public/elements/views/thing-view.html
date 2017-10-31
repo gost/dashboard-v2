@@ -3,26 +3,39 @@
 
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
-<link rel="import" href="../../bower_components/st-core/st-entity-things.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../../css/app-styles.html" />
 
 <dom-module id="thing-view">
-    <template>        
-    <style>       
-          :host {
-            --px-card-background-color: #111F27;
-          }
+    <template>       
+        
+        <style>       
+            :host {
+                --px-card-background-color: #111F27;
+            }
 
-          .card {
-            padding-top: 20px;
-          }
-    </style>   
+            .card {
+                padding-top: 20px;
+            }
 
-    <px-card class="card" >
-      <h1>{{thing.name}}</h1>
-    </px-card>   
 
-  </template>
+        </style>   
+        <style include="app-styles"></style> 
+
+        <px-card class="card" header-text="Things({{id}})" icon="px-nav:hierarchy">
+            <div class="entityInfoHeader">id</div>
+            <div class="entityInfo">{{id}}</div>
+            <div class="entityInfoHeader">name</div>
+            <div class="entityInfo">{{name}}</div>
+            <div class="entityInfoHeader">description</div>
+            <div class="entityInfo">{{description}}</div>
+            <div class="entityInfoHeader">properties</div>
+            <div class="entityInfo">{{propertiesstring}}</div>
+        </px-card>   
+        <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{id}}" name="{{name}}" description="{{description}}" props="{{props}}"></st-entity-thing>
+    </template>
+
     <script>
         Polymer({
             is: 'thing-view',
@@ -30,8 +43,34 @@
                 thing: {
                     type: Object,
                     notify: true
-                }
+                },
+                id: {
+                    type: String,
+                    notify: true
+                },
+                name: {
+                    type: String,
+                    notify: true
+                },
+                description: {
+                    type: String,
+                    notify: true
+                },
+                props: {
+                    type: Object,
+                    notify: true,
+                    observer: '_propsSet'
+                },
+                propertiesstring: {
+                    type: String,
+                    notify: true
+                },
+            },
+            _propsSet(props){
+                //this.propertiesstring = JSON.stringify(props, null, 4);
+                this.propertiesstring = JSON.stringify(JSON.parse(props), null, "\t"); 
             }
         });
     </script>
+
 </dom-module>
