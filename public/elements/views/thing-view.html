@@ -6,6 +6,7 @@
 <link rel="import" href="../../bower_components/px-map/px-map.html">
 <link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
 <link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
+<link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
@@ -50,31 +51,31 @@
                 <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                     <div class="flex__item flex__item--top" >
                         <template is="dom-repeat" items="{{locations}}">                
-                                <div class="entityInfoHeader">id</div>
-                                <div class="entityInfo">{{_getID(item)}}</div>
-                                <div class="entityInfoHeader">name</div>
-                                <div class="entityInfo">{{item.name}}</div>
-                                <div class="entityInfoHeader">description</div>
-                                <div class="entityInfo">{{item.description}}</div>   
-                                <div class="entityInfoHeader">encoding</div>
-                                <div class="entityInfo">{{item.encodingType}}</div>
-                                <div class="entityInfoHeader">location</div>
-                                <div class="entityInfo">{{_getLocationString(item)}}</div>      
+                            <div class="entityInfoHeader">id</div>
+                            <div class="entityInfo">{{_getID(item)}}</div>
+                            <div class="entityInfoHeader">name</div>
+                            <div class="entityInfo">{{item.name}}</div>
+                            <div class="entityInfoHeader">description</div>
+                            <div class="entityInfo">{{item.description}}</div>   
+                            <div class="entityInfoHeader">encoding</div>
+                            <div class="entityInfo">{{item.encodingType}}</div>
+                            <div class="entityInfoHeader">location</div>
+                            <div class="entityInfo">{{_getLocationString(item)}}</div>      
                         </template>
                     </div>
-
-                    
                 </div>
             </px-card>   
         </div>   
-        <div id="mapwrapper" style="height:200px; width:100%; display:flex" >                
-                <px-map id="map" zoom="0" lat="0" lng="0" flex-to-size disable-scroll-zoom disable-dragging>
+        <div id="mapwrapper" style="height:150px; width:100%; display:flex" >                
+                <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
+                <px-map-control-zoom position='bottomright'>
+                </px-map-control-zoom>
                 <px-map-tile-layer
                     url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
                 </px-map-tile-layer>
                 <px-map-layer-geojson 
                     data="[[mapdata]]" 
-                    feature-style='{"color":"#3E87E8"}' 
+                    feature-style='{"color":"#FA39DD", "fillColor": "#FA39DD", "weight": 8, "opacity": 0.8 , "fillOpacity": 0.8}' 
                     show-feature-properties>
                 </px-map-layer-geojson>
                 </px-map>

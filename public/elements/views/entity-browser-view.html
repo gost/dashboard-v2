@@ -5,6 +5,7 @@
 
 <link rel="import" href="../../css/app-styles.html">
 <link rel="import" href="../../bower_components/px-tabs/px-tabs.html" />
+<link rel="import" href="../../bower_components/px-breadcrumbs/px-breadcrumbs.html" />
 
 <link rel="import" href="entities-view.html" />
 <link rel="import" href="thing-view.html" />
@@ -36,6 +37,12 @@
       </px-tabs>
     </div>
 
+    <px-breadcrumbs
+    items="[[crumbs]]"
+    selectedRoute='["henk", "ingrid"]'
+    click-only-mode>
+    </px-breadcrumbs>
+    
     <iron-pages selected="{{selectedpage}}">
         <entities-view id="thingsview" arraytype="things" selected="{{selectedthing}}"></entities-view>
         <entities-view id="locationsview" arraytype="locations" selected="{{selectedlocation}}"></entities-view>
@@ -55,6 +62,10 @@
       properties: {
         headingtext: {
           type: String
+        },
+        crumbs: {
+          type: Array,
+          value: [{ label: "henk", id: "henk"}, { label: "ingrid", id: "ingrid"}]           
         },
         selectedtab: {
             type: String,
@@ -129,6 +140,12 @@
         this.selectedpage = selected;
       },
       _thingChanged(id){
+        var breadcrumb = {label: "Things", id: "Things"};
+        this.crumbs.push(breadcrumb);
+
+        var breadcrumb2 = {label: "Things(" + id + ")", id: "Things(" + id + ")"};
+        this.crumbs.push(breadcrumb2);
+
         this.selectedpage = 8;
       },
       _locationChanged(id){
@@ -151,7 +168,7 @@
       },
       _featureofinterestChanged(id){
         this.selectedpage = 15;
-      },
+      }
     });
   </script>
 </dom-module>
