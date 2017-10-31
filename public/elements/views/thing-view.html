@@ -3,7 +3,12 @@
 
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
+<link rel="import" href="../../bower_components/px-map/px-map.html">
+<link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
+<link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../../css/app-styles.html" />
 
@@ -33,7 +38,26 @@
             <div class="entityInfoHeader">properties</div>
             <div class="entityInfo">{{propertiesstring}}</div>
         </px-card>   
+        <px-card class="card" header-text="Things({{id}})/Locations" icon="px-nav:hierarchy">
+            <template is="dom-repeat" items="{{locations}}">                
+                <div class="entityInfo">{{item.location}}</div>               
+            </template>
+            <div id="mapwrapper" style="height:400px; width:600px; display:flex">
+            <px-map id="map" zoom="0" lat="0" lng="0" flex-to-size>
+            <px-map-tile-layer
+                url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
+            </px-map-tile-layer>
+            <px-map-layer-geojson 
+                data="[[mapdata]]" 
+                feature-style='{"color":"#3E87E8"}' 
+                show-feature-properties>
+            </px-map-layer-geojson>
+            </px-map>
+            </div>
+        </px-card>   
         <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{id}}" name="{{name}}" description="{{description}}" props="{{props}}"></st-entity-thing>
+        <st-entity-locations id="entitylocations" thingid="[[id]]" collection="{{locations}}"></st-entity-locations>
+        <st-entity-datastreams id="entitydatastreams" thingid="[[id]]" collection="{{datastreams}}"></st-entity-datastreams>
     </template>
 
     <script>
@@ -42,11 +66,12 @@
             properties: {
                 thing: {
                     type: Object,
-                    notify: true
+                    notify: true                    
                 },
                 id: {
                     type: String,
-                    notify: true
+                    notify: true,
+                    observer: '_idSet'
                 },
                 name: {
                     type: String,
@@ -65,10 +90,55 @@
                     type: String,
                     notify: true
                 },
+                locations: {
+                    type: Array,
+                    notify: true,
+                    observer: '_locationsReceived'
+                },
+                datastreams: {
+                    type: Array,
+                    notify: true
+                },
+                mapdata: {
+                    type: Object,
+                    notify: true
+                }
             },
-            _propsSet(props){
-                //this.propertiesstring = JSON.stringify(props, null, 4);
+            _propsSet(props){                
                 this.propertiesstring = JSON.stringify(JSON.parse(props), null, "\t"); 
+            },
+            _idSet(id){
+                this.$.entitylocations.get();
+                this.$.entitydatastreams.get();
+            },
+            _locationsReceived(locations){   
+                if(!locations || locations.length == 0)     {
+                    return;
+                }
+
+                coordinates = locations[0].location.coordinates;
+                this.$.map.lng = coordinates[0];
+                this.$.map.lat = coordinates[1];
+                this.$.map.zoom = 15;
+
+                fc = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+
+                for (var i = 0, len = locations.length; i < len; i++) {
+                    feature = {
+                        type: "Feature",
+                        id: locations[i]['@iot.id'],
+                        properties: {},
+                        geometry: locations[i].location
+                    };
+
+                    fc.features.push(feature);
+                }
+
+                this.mapdata = fc;
+                this.$.map.invalidateSize();
             }
         });
     </script>
