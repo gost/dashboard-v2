@@ -14,12 +14,10 @@
             }
         </style>
         <template is="dom-repeat" items="{{details}}">  
-            <label for="{{item.label}}" >{{item.label}}</label>
-            
+            <label for="{{item.label}}">{{item.label}}</label>            
             <template is="dom-if" if='{{_show(item.type, "text")}}'>
                 <input id="{{item.label}}" class="text-input input--regular" disabled="{{_disabled(item.write)}}" type="text" value="{{item.value}}">
-            </template> 
-            
+            </template>             
             <template is="dom-if" if='{{_show(item.type, "object")}}'>
                 <textarea value="{{_objectToString(item.value)}}" disabled="{{_disabled(item.write)}}"></textarea>
             </template>
@@ -42,8 +40,6 @@
             },
             _objectToString(object){                
                 return JSON.stringify(object, null, "\t"); 
-
-                //return JSON.stringify(JSON.parse(object), null, "\t"); 
             },
         });
     </script>

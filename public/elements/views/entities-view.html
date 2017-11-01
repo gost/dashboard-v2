@@ -119,7 +119,8 @@
                 this.odata.filter = evt.detail.filter;
                 this.request();
             },
-            _rowSelected(evt) {
+            _rowSelected(evt) {          
+                this.selected = null;                
                 this.selected = evt.srcElement;
             },
             _show(type1, type2) {

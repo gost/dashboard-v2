@@ -28,15 +28,14 @@
     <dashboard-header application-title="GOST dashboard"></dashboard-header>
 
     <div class="viewport">
-      <app-location
-        route="{{route}}"
-        use-hash-as-path
-        >
+      <app-location 
+        route="{{route}}" 
+        use-hash-as-path>
       </app-location>
       <px-app-route
-        id="starterAppRoute"
+        id="stRoute"
         use-hash-as-path
-        route="{{route}}"
+        route="{{route}}"        
         update-nav-route
         nav-route="{{navRoute}}">
       </px-app-route>
@@ -107,14 +106,14 @@
       },
 
       ready: function(){
-        if (!this.$.starterAppRoute.navRoute) {
+        if (!this.$.stRoute.navRoute) {
           // set default route
-          this.$.starterAppRoute.navRoute = ['widget'];
+          this.$.stRoute.navRoute = ['widget'];
         }
       },
 
       getHref: function(navRoute) {
-        var navRoute = this.$.starterAppRoute.navRoute || ['widget'];
+        var navRoute = this.$.stRoute.navRoute || ['widget'];
         return '/elements/views/' + navRoute[0] + '-view.html';
       }
 

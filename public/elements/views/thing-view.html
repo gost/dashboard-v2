@@ -133,6 +133,10 @@
                 }
             },
             _thingSet(thing){
+                if(!thing){
+                    return;
+                }
+                
                 this.thingid = this._getID(thing);
                 this.thingdetails = [
                     { label: "id", value: this._getID(thing), write: false, type: "text" },
