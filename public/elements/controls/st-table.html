@@ -148,9 +148,6 @@
             },
             _tableDataChanged(tabledata) {
                 this.result = this.tabledata.map(d => {
-                    if (d.properties) {
-                        d.properties = JSON.stringify(d.properties);
-                    }
                     return d;
                 });
                 this._calculatePaging();

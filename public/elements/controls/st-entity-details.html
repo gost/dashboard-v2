@@ -1,0 +1,50 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/px-data-table/px-data-table.html" />
+
+<link rel="import" href="st-entity-details-styles.html" />
+
+<dom-module id="st-entity-details">
+    <template>    
+        <style include="st-entity-details-styles"></style>
+        <style>
+            :host{
+                --px-input-text-color--disabled: #CED4D6;
+            }
+        </style>
+        <template is="dom-repeat" items="{{details}}">  
+            <label for="{{item.label}}" >{{item.label}}</label>
+            
+            <template is="dom-if" if='{{_show(item.type, "text")}}'>
+                <input id="{{item.label}}" class="text-input input--regular" disabled="{{_disabled(item.write)}}" type="text" value="{{item.value}}">
+            </template> 
+            
+            <template is="dom-if" if='{{_show(item.type, "object")}}'>
+                <textarea value="{{_objectToString(item.value)}}" disabled="{{_disabled(item.write)}}"></textarea>
+            </template>
+        </template>
+    </template>
+    <script>
+        Polymer({
+            is: 'st-entity-details',
+            properties: {
+                details: {
+                    type: Array,
+                    notify: true
+                }
+            },
+            _disabled(write){
+                return write == true ? false : true;
+            },
+            _show(type1, type2){
+                return type1 == type2 ? true : false;
+            },
+            _objectToString(object){                
+                return JSON.stringify(object, null, "\t"); 
+
+                //return JSON.stringify(JSON.parse(object), null, "\t"); 
+            },
+        });
+    </script>
+</dom-module>

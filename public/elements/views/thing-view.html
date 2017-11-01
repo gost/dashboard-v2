@@ -10,7 +10,10 @@
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
+
 <link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../controls/st-entity-details.html">
+
 <link rel="import" href="../../css/app-styles.html" />
 <link rel="import" href="thing-view-styles.html" />
 
@@ -37,39 +40,22 @@
         <style include="app-styles"></style> 
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
-            <px-card class="card flex__item flex__item--top" header-text="Things({{id}})" icon="px-nav:hierarchy">                    
-                <div class="entityInfoHeader">id</div>
-                <div class="entityInfo">{{id}}</div>
-                <div class="entityInfoHeader">name</div>
-                <div class="entityInfo">{{name}}</div>
-                <div class="entityInfoHeader">description</div>
-                <div class="entityInfo">{{description}}</div>
-                <div class="entityInfoHeader">properties</div>
-                <div class="entityInfo">{{propertiesstring}}</div>
+            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})" icon="px-nav:hierarchy">  
+                <st-entity-details details="{{thingdetails}}"></st-entity-details>
             </px-card>   
-            <px-card class="card flex__item flex__item--top" header-text="Things({{id}})/Locations" icon="px-nav:hierarchy">
+            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})/Locations" icon="px-nav:hierarchy">
                 <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                     <div class="flex__item flex__item--top" >
-                        <template is="dom-repeat" items="{{locations}}">                
-                            <div class="entityInfoHeader">id</div>
-                            <div class="entityInfo">{{_getID(item)}}</div>
-                            <div class="entityInfoHeader">name</div>
-                            <div class="entityInfo">{{item.name}}</div>
-                            <div class="entityInfoHeader">description</div>
-                            <div class="entityInfo">{{item.description}}</div>   
-                            <div class="entityInfoHeader">encoding</div>
-                            <div class="entityInfo">{{item.encodingType}}</div>
-                            <div class="entityInfoHeader">location</div>
-                            <div class="entityInfo">{{_getLocationString(item)}}</div>      
+                        <template is="dom-repeat" items="{{locationsdetails}}">  
+                            <st-entity-details details="{{item}}"></st-entity-details>               
                         </template>
                     </div>
                 </div>
             </px-card>   
         </div>   
         <div id="mapwrapper" style="height:150px; width:100%; display:flex" >                
-                <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
-                <px-map-control-zoom position='bottomright'>
-                </px-map-control-zoom>
+            <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
+                <px-map-control-zoom position='bottomright'></px-map-control-zoom>
                 <px-map-tile-layer
                     url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
                 </px-map-tile-layer>
@@ -78,15 +64,15 @@
                     feature-style='{"color":"#FA39DD", "fillColor": "#FA39DD", "weight": 8, "opacity": 0.8 , "fillOpacity": 0.8}' 
                     show-feature-properties>
                 </px-map-layer-geojson>
-                </px-map>
-            </div>
+            </px-map>
+        </div>
         <px-card class="card" header-text="Things({{id}})/Datastreams" icon="px-nav:hierarchy">
             <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
         </px-card> 
           
-        <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{id}}" name="{{name}}" description="{{description}}" props="{{props}}"></st-entity-thing>
-        <st-entity-locations id="entitylocations" thingid="[[id]]" collection="{{locations}}"></st-entity-locations>
-        <st-entity-datastreams id="entitydatastreams" thingid="[[id]]" collection="{{datastreams}}" odata="[[datastreamodata]]" count="{{datastreamcount}}"></st-entity-datastreams>
+        <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{thingid}}"></st-entity-thing>
+        <st-entity-locations id="entitylocations" thingid="[[thingid]]" collection="{{locations}}"></st-entity-locations>
+        <st-entity-datastreams id="entitydatastreams" thingid="[[thingid]]" collection="{{datastreams}}" odata="[[datastreamodata]]" count="{{datastreamcount}}"></st-entity-datastreams>
     </template>
 
     <script>
@@ -95,29 +81,22 @@
             properties: {
                 thing: {
                     type: Object,
-                    notify: true                    
-                },
-                id: {
-                    type: String,
                     notify: true,
-                    observer: '_idSet'
-                },
-                name: {
+                    observer: '_thingSet'                 
+                },     
+                thingid: {
                     type: String,
                     notify: true
-                },
-                description: {
-                    type: String,
-                    notify: true
-                },
-                props: {
-                    type: Object,
+                },    
+                thingdetails: {
+                    type: Array,
                     notify: true,
-                    observer: '_propsSet'
+                    value: []
                 },
-                propertiesstring: {
-                    type: String,
-                    notify: true
+                locationsdetails: {
+                    type: Array,
+                    notify: true,
+                    value: []
                 },
                 locations: {
                     type: Array,
@@ -153,10 +132,15 @@
                     notify: true
                 }
             },
-            _propsSet(props){                
-                this.propertiesstring = JSON.stringify(JSON.parse(props), null, "\t"); 
-            },
-            _idSet(id){
+            _thingSet(thing){
+                this.thingid = this._getID(thing);
+                this.thingdetails = [
+                    { label: "id", value: this._getID(thing), write: false, type: "text" },
+                    { label: "name", value: thing.name, write: false, type: "text" },
+                    { label: "description", value: thing.description, write: false, type: "text" },
+                    { label: "properties", value: thing.properties, write: false, type: "object" }
+                ]
+
                 this.$.entitylocations.get();
                 this.$.entitydatastreams.get();
             },
@@ -168,10 +152,7 @@
                 this.datastreamodata.top = event.detail.top;
                 this.datastreamodata.skip = event.detail.skip;
                 this.$.entitydatastreams.get();
-            },
-            _getLocationString(location){
-                return JSON.stringify(location.location, null, "\t"); 
-            },
+            },            
             _locationsReceived(locations){   
                 if(!locations || locations.length == 0)     {
                     return;
@@ -200,8 +181,27 @@
 
                 this.mapdata = fc;
                 this.$.map.invalidateSize();
+                this._setLocationsDetails(locations);
+            },
+            // create details array to show using st-entity-details
+            _setLocationsDetails(locations){                
+                var locationsdetails = [];
+                for (var i = 0, len = locations.length; i < len; i++) {
+                    var location = locations[i];
+
+                    details = [
+                        { label: "id", value: this._getID(location), write: false, type: "text" },
+                        { label: "name", value: location.name, write: false, type: "text" },
+                        { label: "description", value: location.description, write: false, type: "text" },
+                        { label: "encoding", value: location.encodingType, write: false, type: "text" },
+                        { label: "location", value: location.location, write: false, type: "object" }
+                    ];
+
+                    locationsdetails.push(details);
+                }
+
+                this.locationsdetails = locationsdetails;   
             }
         });
     </script>
-
 </dom-module>
