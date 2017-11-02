@@ -4,7 +4,9 @@
     "fragments": [
       "public/elements/views/entity-browser-view.html",
       "public/elements/views/map-view.html",
-      "public/elements/views/things-view.html",
+      "public/elements/views/thing-view.html",
+      "public/elements/views/location-view.html",
+      "public/elements/views/entities-view.html",
       "public/elements/views/widget-view.html"
     ],
     "sources": [
