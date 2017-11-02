@@ -30,6 +30,21 @@
                         </px-table-row>                
                 </template>
             </template>
+            <template is="dom-if" if='{{_show(arraytype, "datastreams")}}'>
+                <template is="dom-repeat" items="{{result}}">                
+                        <px-table-row
+                            tappable
+                            fit-underlay
+                            title="{{item.name}}"
+                            body="{{item.description}}"
+                            label-left="{{_getID(item)}}" 
+                            label-right="{{_getDatastreamObservationResult(item)}}" 
+                            icon-right="px-utl:chevron-right"
+                            item="{{item}}"
+                            icon-size="22">
+                        </px-table-row>                
+                </template>
+            </template>
             <template is="dom-if" if='{{_show(arraytype, "historicallocations")}}'>
                 <template is="dom-repeat" items="{{result}}">                
                         <px-table-row
@@ -140,6 +155,13 @@
             _getID(obj) {
                 return obj['@iot.id'];
             },
+            _getDatastreamObservationResult(item) {
+                if(item.Observations){
+                    return item.Observations[0].result + " " + item.unitOfMeasurement.symbol;
+                }
+
+                return "";
+            },
             _calculatePaging() {
                 this.firstItemIndexToDisplay = this.skip;
                 this.lastItemIndexToDisplay = Number(this.count) < Number(this.top) ? Number(this.count) : (Number(this.top) + Number(this.skip)) > Number(this.count) ? this.count : Number(this.top) + Number(this.skip);
@@ -153,7 +175,7 @@
                 this._calculatePaging();
             },
             _showDefault(type) {
-                if(type == "things" || type == "locations" || type == "datastreams" || type == "sensors" || type == "observedproperties" || type == "featuresofinterest"){
+                if(type == "things" || type == "locations" || type == "sensors" || type == "observedproperties" || type == "featuresofinterest"){
                     return true;
                 }
 

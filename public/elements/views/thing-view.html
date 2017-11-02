@@ -2,7 +2,6 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../../bower_components/px-card/px-card.html">
-<link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
 <link rel="import" href="../../bower_components/px-map/px-map.html">
 <link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
 <link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
@@ -66,7 +65,7 @@
                 </px-map-layer-geojson>
             </px-map>
         </div>
-        <px-card class="card" header-text="Things({{id}})/Datastreams" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="Things({{thingid}})/Datastreams" icon="px-nav:hierarchy">
             <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
         </px-card> 
           
@@ -114,7 +113,7 @@
                 datastreamodata: {
                     type: Object,
                     value: function() { 
-                        return { skip: 0, count: true, top: 10 }; 
+                        return { skip: 0, count: true, top: 10, expand: ["Observations($top=1;$select=result)"] }; 
                     } 
                 },
                 datastreamcount: {

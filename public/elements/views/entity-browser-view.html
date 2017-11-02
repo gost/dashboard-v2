@@ -8,6 +8,7 @@
 
 <link rel="import" href="entities-view.html" />
 <link rel="import" href="thing-view.html" />
+<link rel="import" href="location-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -46,6 +47,7 @@
         <entities-view id="observationsview" name="observations" arraytype="observations" selected="{{selectedobservation}}"></entities-view>
         <entities-view id="featuresofinterestview" name="featuresofinterest" arraytype="featuresofinterest" selected="{{selectedfeatureofinterest}}"></entities-view>
         <thing-view name="thing" thing="{{selectedthing}}"></thing-view>
+        <location-view name="location" location="{{selectedlocation}}"></location-view>
     </iron-pages>
 
   </template>
@@ -72,6 +74,7 @@
         },
         selectedlocation: {
           type: Object,
+          notify: true,
           observer: '_locationChanged'
         },
         selectedhistoricallocation: {
