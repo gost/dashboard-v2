@@ -12,6 +12,7 @@
 <link rel="import" href="entities-view.html" />
 <link rel="import" href="thing-view.html" />
 <link rel="import" href="location-view.html" />
+<link rel="import" href="historicallocation-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -53,6 +54,7 @@
       <entities-view id="featuresofinterestview" name="{{pages.featuresofinterest.array}}" arraytype="featuresofinterest" selected="{{selectedfeatureofinterest}}"></entities-view>
       <thing-view id="thingview" name="{{pages.things.single}}" thing="{{selectedthing}}"></thing-view>
       <location-view id="locationview" name="{{pages.locations.single}}" location="{{selectedlocation}}" selectedhistoricallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"></location-view>
+      <historicallocation-view id="historicallocationview" name="{{pages.historicallocations.single}}" historicallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"  selectedlocation="{{selectedlocation}}"></historicallocation-view>
     </iron-pages>
 
   </template>
@@ -172,6 +174,9 @@
           case this.pages.locations.single:
             this.$.locationview.load(this.currentid);            
             break;
+          case this.pages.historicallocations.single:
+            this.$.historicallocationview.load(this.currentid);            
+            break;
         }
       },
       _setUrl(entity, id){
@@ -189,42 +194,42 @@
       },
       _thingChanged(entity){
         if(this.selectedthing){
-          this._setUrl('things', entity['@iot.id']);
+          this._setUrl(this.pages.things.array, entity['@iot.id']);
         }
       },
       _locationChanged(entity){
         if(this.selectedlocation){
-          this._setUrl('locations', entity['@iot.id']);
+          this._setUrl(this.pages.locations.array, entity['@iot.id']);
         }
       },
       _historicalLocationChanged(entity){
         if(this.selectedhistoricallocation){
-          this._setUrl('historicallocations', entity['@iot.id']);
+          this._setUrl(this.pages.historicallocations.array, entity['@iot.id']);
         }
       },
       _datastreamChanged(entity){
         if(this.selecteddatastream){
-          this._setUrl('datastreams', entity['@iot.id']);
+          this._setUrl(this.pages.datastreams.array, entity['@iot.id']);
         }
       },
       _sensorChanged(entity){
         if(this.selectedsensor){
-          this._setUrl('sensors', entity['@iot.id']);
+          this._setUrl(this.pages.sensors.array, entity['@iot.id']);
         }
       },
       _observedpropertyChanged(entity){
         if(this.selectedobservedproperty){
-          this._setUrl('observedproperties', entity['@iot.id']);
+          this._setUrl(this.pages.observedproperties.array, entity['@iot.id']);
         }
       },
       _observationChanged(entity){
         if(this.selectedobservation){
-          this._setUrl('observations', entity['@iot.id']);
+          this._setUrl(this.pages.observations.array, entity['@iot.id']);
         }
       },
       _featureofinterestChanged(entity){
         if(this.selectedfeatureofinterest){
-          this._setUrl('featuresofinterest', entity['@iot.id']);        
+          this._setUrl(this.pages.featuresofinterest.array, entity['@iot.id']);        
         }
       }
     });

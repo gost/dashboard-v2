@@ -74,7 +74,7 @@
             </template>
     </px-table-view>
 
-    <div class="paginationContainer">
+    <div class="paginationContainer" hidden="{{showpaging}}">
         <!-- Disable choosing row size for now -->
         <!-- <span class="pagesize  u-mr+">
                 <span class="rowsPerPage u-mr--">Rows per page</span>
@@ -150,6 +150,10 @@
                 result: {
                     type: Array,
                     notify: true,
+                },
+                showpaging: {
+                    type: Boolean,
+                    value: true
                 }
             },
             _getID(obj) {

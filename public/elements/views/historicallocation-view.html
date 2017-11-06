@@ -1,0 +1,203 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-map/px-map.html">
+<link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
+<link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
+<link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-historicallocation.html">
+
+<link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../controls/st-entity-details.html">
+
+<link rel="import" href="../../css/app-styles.html" />
+<link rel="import" href="historicallocation-view-styles.html" />
+
+<dom-module id="historicallocation-view">
+    <template>       
+        
+        <style>       
+            :host {
+                --px-card-background-color: #111F27;
+            }
+
+            body {
+                background-color: #111F27;
+            }
+
+            .card {
+                padding-top: 20px;
+                min-width: 400px;
+                padding-bottom: 2rem;
+            }
+
+        </style>   
+        <style include="historicallocation-view-styles"></style> 
+        <style include="app-styles"></style> 
+        <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                              
+            <px-card class="card flex__item flex__item--top" header-text="HistoricalLocations({{historicallocationid}})" icon="px-nav:hierarchy">  
+                <st-entity-details details="{{historicallocationdetails}}"></st-entity-details>
+            </px-card>   
+            <px-card class="card flex__item flex__item--top" header-text="Map" icon="px-nav:hierarchy">
+                <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                    <div class="flex__item flex__item--top" >
+                        <div id="mapwrapper" style="height:400px; width:100%; display:flex" >                
+                            <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
+                                <px-map-control-zoom position='bottomright'></px-map-control-zoom>
+                                <px-map-tile-layer
+                                    url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
+                                </px-map-tile-layer>
+                                <px-map-layer-geojson 
+                                    data="[[mapdatalocation]]" 
+                                    feature-style='{"color":"#90C3D4", "fillColor": "#90C3D4", "weight": 3, "opacity": 0.6 , "fillOpacity": 0.6}' 
+                                    show-feature-properties>
+                                </px-map-layer-geojson>
+                            </px-map>
+                        </div>
+                    </div>
+                </div>
+            </px-card>   
+        </div>   
+
+        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Locations" icon="px-nav:hierarchy">
+            <st-table              
+                arraytype="locations"
+                tabledata="[[locations]]" 
+                on-px-table-row-tap="_rowSelectedLocation" 
+                showpaging="false">
+            <st-table>
+        </px-card> 
+
+        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Thing" icon="px-nav:hierarchy">
+            <st-table 
+                arraytype="things"
+                tabledata="[[things]]" 
+                on-px-table-row-tap="_rowSelectedThing" 
+                showpaging="false">
+            <st-table>
+        </px-card> 
+          
+        <st-entity-historicallocation id="entity" gid="{{historicallocationid}}" rawreceived="{{historicallocation}}" ></st-entity-historicallocatio>
+        <st-entity-locations id="entitylocations" collection="{{locations}}" historicallocationid="{{historicallocationid}}"></st-entity-locations>
+        <st-entity-thing id="entitything" historicallocationid="[[historicallocationid]]" rawreceived="{{thing}}" ></st-entity-thing>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'historicallocation-view',
+            properties: {
+                historicallocation: {
+                    type: Object,
+                    notify: true,  
+                    observer: "_historicalLocationSet"                               
+                },     
+                historicallocationid: {
+                    type: String,
+                    notify: true
+                },    
+                historicallocationdetails: {
+                    type: Array,
+                    notify: true,
+                    value: []
+                },
+                locations: {
+                    type: Array,
+                    notify: true,
+                    value: [],
+                    observer: '_locationsReceived'
+                },
+                thing: {
+                    type: Object,
+                    notify: true,
+                    observer: "_thingReceived"
+                },
+                things: {
+                    type: Array,
+                    notify: true,
+                    value: []
+                },
+                mapdatalocation: {
+                    type: Object,
+                    notify: true
+                },             
+                selectedlocation: {
+                    type: Object,
+                    notify: true
+                },
+                selectedthing: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            _historicalLocationSet(historicallocation){
+                if(!historicallocation){
+                    return;
+                }
+                
+                // create detail info for entity-detail-view
+                this.historicallocationid = this._getID(historicallocation);
+                this.historicallocationdetails = [
+                    { label: "id", value: this._getID(historicallocation), write: false, type: "text" },
+                    { label: "time", value: historicallocation.time, write: false, type: "text" }
+                ]
+
+                this.$.entitylocations.get();
+                this.$.entitything.get();
+            },
+            _setLocationOnMap(location){
+                fc = {
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        id: location['@iot.id'],
+                        properties: {},
+                        geometry: location.location
+                    }]
+                };
+
+                this.mapdatalocation = fc;                
+            },
+            _mapInit(){
+                coordinates = this.locations[0].location.coordinates;
+                this.$.map.lng = coordinates[0];
+                this.$.map.lat = coordinates[1];
+                this.$.map.zoom = 16;
+                this.$.map.invalidateSize();
+            },
+            _getID(item){
+                return item['@iot.id'];
+            },     
+            _locationsReceived(locations){   
+                if(!locations || locations.length == 0)     {
+                    return;
+                }
+
+                // show location on map
+                this._setLocationOnMap(locations[0]);
+                this._mapInit(); 
+            },
+            _thingReceived(thing){
+                var newThings = [thing]
+                this.things = newThings;
+            },
+            _rowSelectedLocation(evt){
+                this.selectedlocation = null;                
+                this.selectedlocation = evt.srcElement;
+            },
+            _rowSelectedThing(evt){
+                this.selectedthing = null;                
+                this.selectedthing = evt.srcElement;
+            },
+            load(id){
+                if(!this.historicallocation){
+                    this.historicallocationid = id;
+                    this.$.entity.get();
+                }
+            }
+        });
+    </script>
+</dom-module>

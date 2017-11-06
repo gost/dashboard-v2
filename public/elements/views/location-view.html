@@ -7,7 +7,7 @@
 <link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
 <link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-things.html">
-<link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-location.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-historicallocations.html">
 
 <link rel="import" href="../controls/st-table.html">
@@ -94,7 +94,7 @@
             <st-table>
         </px-card> 
           
-        <st-entity-location id="entity" rawreceived="[[location]]" gid="{{locationid}}"></st-entity-location>
+        <st-entity-location id="entity" rawreceived="{{location}}" gid="{{locationid}}"></st-entity-location>
         <st-entity-historicallocations 
             id="entityhistoricallocations" 
             locationid="[[locationid]]" 
@@ -286,6 +286,12 @@
             _rowSelectedThing(evt) {
                 this.selectedthing = null;                
                 this.selectedthing = evt.srcElement;
+            },
+            load(id){
+                if(!this.location){
+                    this.locationid = id;
+                    this.$.entity.get();
+                }
             }
         });
     </script>
