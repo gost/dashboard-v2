@@ -69,7 +69,7 @@
             <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
         </px-card> 
           
-        <st-entity-thing id="entity" rawreceived="[[thing]]" gid="{{thingid}}"></st-entity-thing>
+        <st-entity-thing id="entity" rawreceived="{{thing}}" gid="{{thingid}}"></st-entity-thing>
         <st-entity-locations id="entitylocations" thingid="[[thingid]]" collection="{{locations}}"></st-entity-locations>
         <st-entity-datastreams id="entitydatastreams" thingid="[[thingid]]" collection="{{datastreams}}" odata="[[datastreamodata]]" count="{{datastreamcount}}"></st-entity-datastreams>
     </template>
@@ -204,6 +204,12 @@
                 }
 
                 this.locationsdetails = locationsdetails;   
+            },
+            load(id){
+                if(!this.thing){
+                    this.thingid = id;
+                    this.$.entity.get();
+                }
             }
         });
     </script>

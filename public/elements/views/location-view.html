@@ -45,14 +45,19 @@
             <px-card class="card flex__item flex__item--top" header-text="Map" icon="px-nav:hierarchy">
                 <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                     <div class="flex__item flex__item--top" >
-                        <div id="mapwrapper" style="height:150px; width:100%; display:flex" >                
+                        <div id="mapwrapper" style="height:400px; width:100%; display:flex" >                
                             <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
                                 <px-map-control-zoom position='bottomright'></px-map-control-zoom>
                                 <px-map-tile-layer
                                     url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
                                 </px-map-tile-layer>
                                 <px-map-layer-geojson 
-                                    data="[[mapdata]]" 
+                                    data="[[mapdatahistoricallocation]]" 
+                                    feature-style='{"color":"#90C3D4", "fillColor": "#90C3D4", "weight": 3, "opacity": 0.6 , "fillOpacity": 0.6}' 
+                                    show-feature-properties>
+                                </px-map-layer-geojson>
+                                <px-map-layer-geojson 
+                                    data="[[mapdatalocation]]" 
                                     feature-style='{"color":"#FA39DD", "fillColor": "#FA39DD", "weight": 8, "opacity": 0.8 , "fillOpacity": 0.8}' 
                                     show-feature-properties>
                                 </px-map-layer-geojson>
@@ -64,16 +69,46 @@
         </div>   
 
         <px-card class="card" header-text="Locations({{locationid}})/HistoricalLocations" icon="px-nav:hierarchy">
-            <st-table id="table" arraytype="historicallocations" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequestHl" ><st-table>
+            <st-table 
+                id="table" 
+                arraytype="historicallocations" 
+                count="{{historicallocationcount}}" 
+                tabledata="[[historicallocations]]" 
+                top="{{historicallocationtop}}" 
+                skip="{{historicallocationskip}}" 
+                on-request="_tableDataRequestHl"
+                on-px-table-row-tap="_rowSelectedHl" >
+            <st-table>
         </px-card> 
 
         <px-card class="card" header-text="Locations({{locationid}})/Things" icon="px-nav:hierarchy">
-            <st-table id="table" arraytype="things" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequestThings" ><st-table>
+            <st-table 
+                id="table" 
+                arraytype="things" 
+                count="{{thingscount}}" 
+                tabledata="[[things]]" 
+                top="{{thingstop}}" 
+                skip="{{thingsskip}}" 
+                on-request="_tableDataRequestThings"
+                on-px-table-row-tap="_rowSelectedThing" >
+            <st-table>
         </px-card> 
           
         <st-entity-location id="entity" rawreceived="[[location]]" gid="{{locationid}}"></st-entity-location>
-        <st-entity-historicallocations id="entityhistoricallocations" locationid="[[locationid]]" collection="{{historicallocations}}" odata="[[historicallocationodata]]" count="{{historicallocationcount}}"></st-entity-historicallocations>
-        <st-entity-things id="entitythings" locationid="[[locationid]]" collection="{{things}}" odata="[[thingsodata]]" count="{{thingscount}}"></st-entity-things>
+        <st-entity-historicallocations 
+            id="entityhistoricallocations" 
+            locationid="[[locationid]]" 
+            collection="{{historicallocations}}"
+            odata="[[historicallocationodata]]" 
+            count="{{historicallocationcount}}">
+        </st-entity-historicallocations>
+        <st-entity-things 
+            id="entitythings" 
+            locationid="[[locationid]]" 
+            collection="{{things}}" 
+            odata="[[thingsodata]]" 
+            count="{{thingscount}}">
+        </st-entity-things>
     </template>
 
     <script>
@@ -97,13 +132,18 @@
                 historicallocations: {
                     type: Array,
                     notify: true,
+                    value: [],
                     observer: '_historicalLocationsReceived'
                 },
                 things: {
                     type: Array,
                     notify: true
                 },
-                mapdata: {
+                mapdatalocation: {
+                    type: Object,
+                    notify: true
+                },
+                mapdatahistoricallocation: {
                     type: Object,
                     notify: true
                 },
@@ -146,6 +186,14 @@
                     type: Number,
                     value: 0,
                     notify: true
+                },
+                selectedhistoricallocation: {
+                    type: Object,
+                    notify: true
+                },
+                selectedthing: {
+                    type: Object,
+                    notify: true
                 }
             },
             _locationSet(location){
@@ -153,6 +201,7 @@
                     return;
                 }
                 
+                // create detail info for entity-detail-view
                 this.locationid = this._getID(location);
                 this.locationdetails = [
                     { label: "id", value: this._getID(location), write: false, type: "text" },
@@ -162,8 +211,33 @@
                     { label: "location", value: location.location, write: false, type: "object" },
                 ]
 
+                // show location on map
+                this._setLocationOnMap(location);
+                this._mapInit(); 
+
+                // get related entities
                 this.$.entityhistoricallocations.get();
                 this.$.entitythings.get();
+            },
+            _setLocationOnMap(location){
+                fc = {
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        id: location['@iot.id'],
+                        properties: {},
+                        geometry: location.location
+                    }]
+                };
+
+                this.mapdatalocation = fc;                
+            },
+            _mapInit(){
+                coordinates = this.location.location.coordinates;
+                this.$.map.lng = coordinates[0];
+                this.$.map.lat = coordinates[1];
+                this.$.map.zoom = 16;
+                this.$.map.invalidateSize();
             },
             _getID(item){
                 return item['@iot.id'];
@@ -185,29 +259,33 @@
                     return;
                 }
 
-                coordinates = hls[0].locations[0].location.coordinates;
-                this.$.map.lng = coordinates[0];
-                this.$.map.lat = coordinates[1];
-                this.$.map.zoom = 16;
-
                 fc = {
                     type: "FeatureCollection",
                     features: []
                 };
 
-                for (var i = 0, len = locations.length; i < len; i++) {
+                for (var i = 0, len = hls.length; i < len; i++) {
+                    var location = hls[i];
                     feature = {
                         type: "Feature",
-                        id: locations[i]['@iot.id'],
-                        properties: {},
-                        geometry: locations[i].location
+                        id: location["@iot.id"],
+                        properties: { "time": location.time },
+                        geometry: location.Locations[i].location
                     };
 
                     fc.features.push(feature);
                 }
 
-                this.mapdata = fc;
-                this.$.map.invalidateSize();                
+                this.mapdatahistoricallocation = fc;
+                this._mapInit(); 
+            },
+            _rowSelectedHl(evt){
+                this.selectedhistoricallocation = null;                
+                this.selectedhistoricallocation = evt.srcElement;
+            },
+            _rowSelectedThing(evt) {
+                this.selectedthing = null;                
+                this.selectedthing = evt.srcElement;
             }
         });
     </script>

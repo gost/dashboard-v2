@@ -2,6 +2,9 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/px-app-helpers/px-app-route/px-app-route.html">
 
 <link rel="import" href="../../css/app-styles.html">
 <link rel="import" href="../../bower_components/px-tabs/px-tabs.html" />
@@ -24,30 +27,32 @@
         }
     </style>
 
+    <app-location use-hash-as-path route="{{route}}"></app-location>
+ 
     <div class="tabs-container">
       <px-tabs attr-for-selected="name" selected="{{selectedtab}}">
-        <px-tab name="things">Things</px-tab>
-        <px-tab name="locations">Locations</px-tab>
-        <px-tab name="historicallocations">Historical Locations</px-tab>
-        <px-tab name="datastreams">Datastreams</px-tab>
-        <px-tab name="sensors">Sensors</px-tab>
-        <px-tab name="observedproperties">Observed Properties</px-tab>
-        <px-tab name="observations">Observations</px-tab>
-        <px-tab name="featuresofinterest">Features of Interest</px-tab>
+        <px-tab name="{{pages.things.array}}">Things</px-tab>
+        <px-tab name="{{pages.locations.array}}">Locations</px-tab>
+        <px-tab name="{{pages.historicallocations.array}}">Historical Locations</px-tab>
+        <px-tab name="{{pages.datastreams.array}}">Datastreams</px-tab>
+        <px-tab name="{{pages.sensors.array}}">Sensors</px-tab>
+        <px-tab name="{{pages.observedproperties.array}}">Observed Properties</px-tab>
+        <px-tab name="{{pages.observations.array}}">Observations</px-tab>
+        <px-tab name="{{pages.featuresofinterest.array}}">Features of Interest</px-tab>
       </px-tabs>
     </div>
 
     <iron-pages attr-for-selected="name" selected="{{selectedpage}}">
-        <entities-view id="thingsview" name="things" arraytype="things" selected="{{selectedthing}}"></entities-view>
-        <entities-view id="locationsview" name="locations" arraytype="locations" selected="{{selectedlocation}}"></entities-view>
-        <entities-view id="historicallocationsview" name="historicallocations" arraytype="historicallocations" selected="{{selectedhistoricallocation}}"></entities-view>
-        <entities-view id="datastreamsview" name="datastreams" arraytype="datastreams" selected="{{selecteddatastream}}"></entities-view>
-        <entities-view id="sensorsview" name="sensors" arraytype="sensors" selected="{{selectedsensor}}"></entities-view>
-        <entities-view id="observedpropertiesview" name="observedproperties" arraytype="observedproperties" selected="{{selectedobservedproperty}}"></entities-view>
-        <entities-view id="observationsview" name="observations" arraytype="observations" selected="{{selectedobservation}}"></entities-view>
-        <entities-view id="featuresofinterestview" name="featuresofinterest" arraytype="featuresofinterest" selected="{{selectedfeatureofinterest}}"></entities-view>
-        <thing-view name="thing" thing="{{selectedthing}}"></thing-view>
-        <location-view name="location" location="{{selectedlocation}}"></location-view>
+      <entities-view id="thingsview" name="{{pages.things.array}}" arraytype="things" selected="{{selectedthing}}"></entities-view>
+      <entities-view id="locationsview" name="{{pages.locations.array}}" arraytype="locations" selected="{{selectedlocation}}"></entities-view>
+      <entities-view id="historicallocationsview" name="{{pages.historicallocations.array}}" arraytype="historicallocations" selected="{{selectedhistoricallocation}}"></entities-view>
+      <entities-view id="datastreamsview" name="{{pages.datastreams.array}}" arraytype="datastreams" selected="{{selecteddatastream}}"></entities-view>
+      <entities-view id="sensorsview" name="{{pages.sensors.array}}" arraytype="sensors" selected="{{selectedsensor}}"></entities-view>
+      <entities-view id="observedpropertiesview" name="{{pages.observedproperties.array}}" arraytype="observedproperties" selected="{{selectedobservedproperty}}"></entities-view>
+      <entities-view id="observationsview" name="{{pages.observations.array}}" arraytype="observations" selected="{{selectedobservation}}"></entities-view>
+      <entities-view id="featuresofinterestview" name="{{pages.featuresofinterest.array}}" arraytype="featuresofinterest" selected="{{selectedfeatureofinterest}}"></entities-view>
+      <thing-view id="thingview" name="{{pages.things.single}}" thing="{{selectedthing}}"></thing-view>
+      <location-view id="locationview" name="{{pages.locations.single}}" location="{{selectedlocation}}" selectedhistoricallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"></location-view>
     </iron-pages>
 
   </template>
@@ -58,14 +63,34 @@
         headingtext: {
           type: String
         },
+        currententity: {
+          type: String
+        },
+        currentid: {
+          type: String
+        },
+        pages: {
+          type: Object,
+          value: function() { 
+              return {
+                things: { array: "things", single: "thing" },
+                locations: { array: "locations", single: "location" },
+                historicallocations: { array: "historicallocations", single: "historicallocation" },
+                datastreams: { array: "datastreams", single: "datastream" },
+                sensors: { array: "sensors", single: "sensor" },
+                observedproperties: { array: "observedproperties", single: "observedproperty" },
+                observations: { array: "observations", single: "observation" },
+                featuresofinterest: { array: "featuresofinterest", single: "featureofinterest" }
+              }; 
+          } 
+        },
         selectedtab: {
             type: String,
-            value: "things",
-            observer: '_selectedChanged'
+            observer: '_selectedTabChanged'
         },
         selectedpage: {
             type: String,
-            value: "things"
+            observer: '_selectedPageChanged'           
         },
         selectedthing: {
           type: Object,
@@ -100,81 +125,108 @@
         selectedfeatureofinterest: {
           type: Object,
           observer: '_featureofinterestChanged'
+        },
+        route: {
+          type: Object,
+          reflectToAttribute: true,
+          observer: '_routeChanged'
         }
-      },    
-      _selectedChanged(selected){
+      }, 
+      _selectedTabChanged(selected){
         switch(selected) {
-          case "things":
+          case this.pages.things.array:
             this.$.thingsview.load();            
             break;
-          case "locations":
+          case this.pages.locations.array:
             this.$.locationsview.load();            
             break;
-          case "historicallocations":
+          case this.pages.historicallocations.array:
             this.$.historicallocationsview.load();            
             break;
-          case "datastreams":
+          case this.pages.datastreams.array:
             this.$.datastreamsview.load();            
             break;
-          case "sensors":
+          case this.pages.sensors.array:
             this.$.sensorsview.load();            
             break;
-          case "observedproperties":
+          case this.pages.observedproperties.array:
             this.$.observedpropertiesview.load();            
             break;
-          case "observations":
-            this.$.observationsview.load();            
+          case this.pages.observations.array:
+            this.$.observationsview.load();
             break;
-          case "featuresofinterest":
+          case this.pages.featuresofinterest.array:
             this.$.featuresofinterestview.load();            
             break;
         }
 
-        this.selectedpage = selected;
+        if(selected != this.currententity){
+          this._setUrl(selected);
+        }
       },
-      _thingChanged(id){
+      _selectedPageChanged(selected){
+        switch(selected) {
+          case this.pages.things.single:
+            this.$.thingview.load(this.currentid);            
+            break;
+          case this.pages.locations.single:
+            this.$.locationview.load(this.currentid);            
+            break;
+        }
+      },
+      _setUrl(entity, id){
+        this.set('route.path', !id ? '/entity-browser/' + entity : '/entity-browser/' + entity + '/' + id);
+        this._routeChanged(this.route);
+      },
+      _routeChanged(route){
+        var path = route.path.split("/");
+        path = path.filter(val => val !== "");
+        this.currententity = path.length > 1 ? path[1] : "things";
+        this.currentid = path.length > 2 ? path[2] : null;
+
+        this.selectedtab =  this.pages[this.currententity].array;
+        this.selectedpage = this.currentid ? this.pages[this.currententity].single : this.pages[this.currententity].array;
+      },
+      _thingChanged(entity){
         if(this.selectedthing){
-          this.selectedpage = "thing";
+          this._setUrl('things', entity['@iot.id']);
         }
       },
-      _locationChanged(id){
+      _locationChanged(entity){
         if(this.selectedlocation){
-          this.selectedpage = "location";
+          this._setUrl('locations', entity['@iot.id']);
         }
       },
-      _historicalLocationChanged(id){
+      _historicalLocationChanged(entity){
         if(this.selectedhistoricallocation){
-          this.selectedpage = "historicallocation";
+          this._setUrl('historicallocations', entity['@iot.id']);
         }
       },
-      _datastreamChanged(id){
+      _datastreamChanged(entity){
         if(this.selecteddatastream){
-          this.selectedpage = "datastream";
+          this._setUrl('datastreams', entity['@iot.id']);
         }
       },
-      _sensorChanged(id){
+      _sensorChanged(entity){
         if(this.selectedsensor){
-          this.selectedpage = "sensor";
+          this._setUrl('sensors', entity['@iot.id']);
         }
       },
-      _observedpropertyChanged(id){
+      _observedpropertyChanged(entity){
         if(this.selectedobservedproperty){
-          this.selectedpage = "observedproperty";
+          this._setUrl('observedproperties', entity['@iot.id']);
         }
       },
-      _observationChanged(id){
+      _observationChanged(entity){
         if(this.selectedobservation){
-          this.selectedpage = "observation";
+          this._setUrl('observations', entity['@iot.id']);
         }
       },
-      _featureofinterestChanged(id){
+      _featureofinterestChanged(entity){
         if(this.selectedfeatureofinterest){
-          this.selectedpage = "featureofinterest";        
+          this._setUrl('featuresofinterest', entity['@iot.id']);        
         }
-      },
-      attached() {
-        var r = this.$.route;
-      },
+      }
     });
   </script>
 </dom-module>

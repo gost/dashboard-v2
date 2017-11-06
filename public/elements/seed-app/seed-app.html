@@ -9,8 +9,6 @@
 <link rel="import" href="../../bower_components/px-app-helpers/px-app-route/px-app-route.html">
 <link rel="import" href="../../bower_components/px-app-nav/px-app-nav.html">
 <link rel="import" href="../../bower_components/px-view/px-view.html">
-<link rel="import" href="../../bower_components/px-login/px-login.html">
-<link rel="import" href="../../bower_components/px-branding-bar/px-branding-bar.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <!-- importing icons here, to fix icon flickering problem when loading asynchronously. -->
@@ -29,14 +27,14 @@
 
     <div class="viewport">
       <app-location 
-        route="{{route}}" 
+        route="{{route}}"
         use-hash-as-path>
       </app-location>
       <px-app-route
         id="stRoute"
         use-hash-as-path
-        route="{{route}}"        
         update-nav-route
+        route="{{route}}"        
         nav-route="{{navRoute}}">
       </px-app-route>
 
@@ -45,7 +43,9 @@
           <px-app-nav
             class="navbar"
             items="{{navItems}}"
-            selected-route="{{navRoute}}">
+            selected-route="{{appnav}}"
+            >
+            <!-- selected-route="{{navRoute}}" -->
           </px-app-nav>
         </div>
       </div>
@@ -89,7 +89,7 @@
               {
                 "label": "Entity Browser",
                 "id": "entity-browser",
-                "icon": "px-fea:catalog"
+                "icon": "px-fea:catalog"           
               },
               {
                 "label": "Map",
@@ -100,8 +100,16 @@
           }
         },
 
+        currentroute:{
+          type: Array
+        },
         navRoute: {
           type: Array,
+          observer: '_navRouteChanged'
+        },
+        appnav: {
+          type: Array,
+          observer: '_appNavChanged'
         }
       },
 
@@ -115,6 +123,51 @@
       getHref: function(navRoute) {
         var navRoute = this.$.stRoute.navRoute || ['widget'];
         return '/elements/views/' + navRoute[0] + '-view.html';
+      },
+
+      _appNavChanged(nav){
+        if(nav != this.currentroute){
+          this.navRoute = nav;
+        }
+      },
+
+      _navRouteChanged(urlnav){
+        if(!urlnav){
+          return;
+        }
+
+        var route = [];
+
+        for(i = 0; i < this.navItems.length; i++){
+          if(urlnav[0] == this.navItems[i].id){
+            route.push(urlnav[0]);
+            urlnav.shift();
+            route = this._recursiveNavItemInChild(route, urlnav, this.navItems[i]);
+            break;
+          }          
+        }
+
+        this.currentroute = route;
+        this.appnav = route;
+      },
+
+      _recursiveNavItemInChild(route, nav, navItem){
+        if(navItem.children){
+          for(i = 0; i < navItem.children.length; i++){
+            if(navItem.children[i].id == nav[0]){
+              route.push(nav[0]);
+              nav.shift();
+
+              if(nav.length != 0){
+                route = _recursiveNavItemInChild(route, nav, navItem.children[i]);
+              }
+
+              break;
+            }
+          }
+        }
+
+        return route;
       }
 
     });

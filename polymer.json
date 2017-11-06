@@ -9,7 +9,7 @@
       "public/elements/views/entities-view.html",
       "public/elements/views/widget-view.html"
     ],
-    "sources": [
+    "sources": [      
       "public/elements/**/*",
       "public/index*",
       "public/seed*"
