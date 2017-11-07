@@ -13,6 +13,7 @@
 <link rel="import" href="thing-view.html" />
 <link rel="import" href="location-view.html" />
 <link rel="import" href="historicallocation-view.html" />
+<link rel="import" href="datastream-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -55,6 +56,7 @@
       <thing-view id="thingview" name="{{pages.things.single}}" thing="{{selectedthing}}"></thing-view>
       <location-view id="locationview" name="{{pages.locations.single}}" location="{{selectedlocation}}" selectedhistoricallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"></location-view>
       <historicallocation-view id="historicallocationview" name="{{pages.historicallocations.single}}" historicallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"  selectedlocation="{{selectedlocation}}"></historicallocation-view>
+      <datastream-view id="datastreamview" name="{{pages.datastreams.single}}" datastream="{{selecteddatastream}}"></datastream-view>
     </iron-pages>
 
   </template>
@@ -176,6 +178,9 @@
             break;
           case this.pages.historicallocations.single:
             this.$.historicallocationview.load(this.currentid);            
+            break;
+          case this.pages.datastreams.single:
+            this.$.datastreamview.load(this.currentid);            
             break;
         }
       },
