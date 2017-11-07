@@ -1,0 +1,1198 @@
+<dom-module id="globalstyle">
+        <template>
+        <style>
+        @charset "UTF-8";
+        /*------------------------------------*    #PX-COLORS-DESIGN
+        \*------------------------------------*/
+        /**
+         * Neutral Palette (gray20 is darkest, gray1 is lightest)
+         */
+        /**
+            * Define grey = gray to avoid dev typos
+            */
+        /**
+         * Actionable Palette
+         */
+        /**
+         * Selection Palette
+         */
+        /**
+         * Dark Actionable Palette
+         */
+        /**
+         * Alerts and Status
+         */
+        /**
+         * Data Visualization
+         */
+        /**
+             * Orange
+             */
+        /**
+             * Yellow
+             */
+        /**
+             * Yellow Green
+             */
+        /**
+             * Green
+             */
+        /**
+             * Teal
+             */
+        /**
+             * Aqua
+             */
+        /**
+             * Cyan
+             */
+        /**
+             * Blue
+             */
+        /**
+             * Violet
+             */
+        /**
+             * Purple
+             */
+        /**
+             * Pink
+             */
+        /**
+             * Red
+             */
+        /**
+             * Brown
+             */
+        /**
+             * Gray
+             */
+        /**
+             * Define grey = gray to avoid dev typos
+             */
+        /**
+             * Salmon
+             */
+
+            .entityInfoHeader {
+                display: block;
+                font-size: 1em;        
+                -webkit-margin-start: 0px;
+                -webkit-margin-end: 0px;
+                font-weight: bold;
+            }
+
+          .entityInfo {
+            font-size: 12px;
+            font-weight: 200;
+            font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+            display: block;
+            padding: 4.5px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: auto;
+          }
+
+          .kpi-bar-wrapper {
+          width: 100%;
+          min-width: 810px;
+          height: 67px;
+          max-height: var(--kpi-bar-wrapper-height, 80px); }
+
+          .kpi-bar-meter-wrapper {
+          display: inline-block;
+          height: 100%;
+          margin: 0 auto; }
+
+          .kpi-bar-meter-bar-wrapper {
+          display: inline-block;
+          width: 4px;
+          height: 60%;
+          background-color: #ccc;
+          border-radius: 1px;
+          overflow: hidden;
+          max-height: 60px; }
+
+          .kpi-bar-meter-bar-content {
+          height: 100%;
+          background-color: var(--kpi-datapoint-bar-meter-color, #4b85a9); }
+          
+        .flex {
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex; }
+        
+        .inline--flex {
+          display: -webkit-inline-box;
+          display: -ms-inline-flexbox;
+          display: inline-flex; }
+        
+        .flex--row {
+          -webkit-box-orient: horizontal;
+          -webkit-box-direction: normal;
+              -ms-flex-direction: row;
+                  flex-direction: row; }
+        
+        .flex--row--rev {
+          -webkit-box-orient: horizontal;
+          -webkit-box-direction: reverse;
+              -ms-flex-direction: row-reverse;
+                  flex-direction: row-reverse; }
+        
+        .flex--col {
+          -webkit-box-orient: vertical;
+          -webkit-box-direction: normal;
+              -ms-flex-direction: column;
+                  flex-direction: column; }
+        
+        .flex--col--rev {
+          -webkit-box-orient: vertical;
+          -webkit-box-direction: reverse;
+              -ms-flex-direction: column-reverse;
+                  flex-direction: column-reverse; }
+        
+        .flex--nowrap {
+          -ms-flex-wrap: nowrap;
+              flex-wrap: nowrap; }
+        
+        .flex--wrap {
+          -ms-flex-wrap: wrap;
+              flex-wrap: wrap; }
+        
+        .flex--wrap--rev {
+          -ms-flex-wrap: wrap-reverse;
+              flex-wrap: wrap-reverse; }
+        
+        .flex--left {
+          -webkit-box-pack: start;
+              -ms-flex-pack: start;
+                  justify-content: flex-start; }
+        
+        .flex--center {
+          -webkit-box-pack: center;
+              -ms-flex-pack: center;
+                  justify-content: center; }
+        
+        .flex--right {
+          -webkit-box-pack: end;
+              -ms-flex-pack: end;
+                  justify-content: flex-end; }
+        
+        .flex--justify {
+          -webkit-box-pack: justify;
+              -ms-flex-pack: justify;
+                  justify-content: space-between; }
+        
+        .flex--spaced {
+          -ms-flex-pack: distribute;
+              justify-content: space-around; }
+        
+        .flex--top {
+          -webkit-box-align: start;
+              -ms-flex-align: start;
+                  align-items: flex-start; }
+        
+        .flex--middle {
+          -webkit-box-align: center;
+              -ms-flex-align: center;
+                  align-items: center; }
+        
+        .flex--bottom {
+          -webkit-box-align: end;
+              -ms-flex-align: end;
+                  align-items: flex-end; }
+        
+        .flex--stretch {
+          -webkit-box-align: stretch;
+              -ms-flex-align: stretch;
+                  align-items: stretch; }
+        
+        .flex--baseline {
+          -webkit-box-align: baseline;
+              -ms-flex-align: baseline;
+                  align-items: baseline; }
+        
+        .flex--top--multi {
+          -ms-flex-line-pack: start;
+              align-content: flex-start; }
+        
+        .flex--middle--multi {
+          -ms-flex-line-pack: center;
+              align-content: center; }
+        
+        .flex--bottom--multi {
+          -ms-flex-line-pack: end;
+              align-content: flex-end; }
+        
+        .flex--stretch--multi {
+          -ms-flex-line-pack: stretch;
+              align-content: stretch; }
+        
+        .flex--justify--multi {
+          -ms-flex-line-pack: justify;
+              align-content: space-between; }
+        
+        .flex--spaced--multi {
+          -ms-flex-line-pack: distribute;
+              align-content: space-around; }
+        
+        .flex__item {
+          -webkit-box-flex: 1;
+              -ms-flex: 1;
+                  flex: 1; }
+        
+        .flex__item--msfix {
+          -webkit-box-flex: 1;
+              -ms-flex: 1 1 auto;
+                  flex: 1 1 auto; }
+        
+        .flex__item--top {
+          -ms-flex-item-align: start;
+              align-self: flex-start; }
+        
+        .flex__item--middle {
+          -ms-flex-item-align: center;
+              -ms-grid-row-align: center;
+              align-self: center; }
+        
+        .flex__item--bottom {
+          -ms-flex-item-align: end;
+              align-self: flex-end; }
+        
+        .flex__item--baseline {
+          -ms-flex-item-align: baseline;
+              align-self: baseline; }
+        
+        .alpha {
+          font-size: 5rem;
+          line-height: 1.06667;
+          font-weight: normal; }
+        
+        .beta {
+          font-size: 4rem;
+          line-height: 1;
+          font-weight: normal; }
+        
+        .gamma {
+          font-size: 3rem;
+          line-height: 1.33333;
+          font-weight: normal; }
+        
+        .delta {
+          font-size: 2rem;
+          line-height: 1.33333;
+          font-weight: normal; }
+        
+        .epsilon {
+          font-size: 1.33333rem;
+          line-height: 1;
+          font-weight: normal; }
+        
+        .zeta {
+          font-size: 0.8rem;
+          line-height: 1.66667;
+          font-weight: normal; }
+        
+        .heading--page {
+          font-size: 2rem;
+          line-height: 1.33333;
+          color: var(--px-headings-heading-page-color, #2c404c); }
+        
+        .heading--section {
+          font-size: 1.33333rem;
+          line-height: 1;
+          color: var(--px-headings-heading-section-color, #677e8c);
+          text-transform: uppercase; }
+        
+        .heading--subsection {
+          font-size: 1rem;
+          line-height: 1.33333;
+          color: var(--px-headings-heading-subsection-color, #2c404c);
+          background-color: var(--px-headings-heading-subsection-background, rgba(136, 154, 165, 0.15));
+          text-transform: uppercase;
+          letter-spacing: var(--px-headings-letter-spacing, 0.3px);
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          padding-left: 5px;
+          padding-right: 5px; }
+        
+        .label {
+          font-size: 0.8rem;
+          line-height: 1.66667;
+          color: var(--px-headings-label-color, #677e8c);
+          text-transform: uppercase;
+          letter-spacing: var(--px-headings-letter-spacing, 0.3px); }
+        
+        .value {
+          font-size: 1rem;
+          line-height: 1.33333;
+          color: var(--px-headings-value-color, #2c404c); }
+        
+        :host {
+          background: #23343f; }
+        
+        #refreshTableBtn {
+          margin-top: 4px;
+          cursor: pointer; }
+        
+        /**
+         * Margin and padding helper classes. Use these to tweak layout on a micro
+         * level.
+         *
+         * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
+         */
+        /**
+             * Padding helper classes.
+             *
+             * Add paddings.
+             */
+        .u-p {
+          padding: 1rem !important; }
+        
+        .u-pt {
+          padding-top: 1rem !important; }
+        
+        .u-pr {
+          padding-right: 1rem !important; }
+        
+        .u-pb {
+          padding-bottom: 1rem !important; }
+        
+        .u-pl {
+          padding-left: 1rem !important; }
+        
+        .u-ph {
+          padding-right: 1rem !important;
+          padding-left: 1rem !important; }
+        
+        .u-pv {
+          padding-top: 1rem !important;
+          padding-bottom: 1rem !important; }
+        
+        /**
+             * Add huge paddings.
+             */
+        .u-p\00002b\00002b
+        {
+          padding: 2rem !important; }
+        
+        .u-pt\00002b\00002b
+        {
+          padding-top: 2rem !important; }
+        
+        .u-pr\00002b\00002b
+        {
+          padding-right: 2rem !important; }
+        
+        .u-pb\00002b\00002b
+        {
+          padding-bottom: 2rem !important; }
+        
+        .u-pl\00002b\00002b
+        {
+          padding-left: 2rem !important; }
+        
+        .u-ph\00002b\00002b
+        {
+          padding-right: 2rem !important;
+          padding-left: 2rem !important; }
+        
+        .u-pv\00002b\00002b
+        {
+          padding-top: 2rem !important;
+          padding-bottom: 2rem !important; }
+        
+        /**
+         * A series of helper classes to use arbitrarily. Only use a helper class if an
+         * element/component doesn’t already have a class to which you could apply this
+         * styling, e.g. if you need to float `.main-nav` left then add `float:left;` to
+         * that ruleset as opposed to adding the `.float--left` class to the markup.
+         *
+         * A lot of these classes carry `!important` as you will always want them to win
+         * out over other selectors.
+         */
+        /* Links
+           ========================================================================== */
+        /**
+         * Remove the gray background color from active links in IE 10.
+         */
+        a {
+          background-color: transparent;
+          /**
+         * Default link colors
+         */
+          /**
+         * Improve readability when focused and also mouse hovered in all browsers.
+         */ }
+          a:link, a:visited {
+            color: #007acc; }
+          a:hover {
+            color: #005c99; }
+          a:active {
+            color: #003d66; }
+          a:active, a:hover {
+            outline: 0; }
+        
+        /**
+         * Add/remove floats
+         */
+        .float--right {
+          float: right !important; }
+        
+        .float--left {
+          float: left !important; }
+        
+        .float--none {
+          float: none !important; }
+        
+        /**
+         * Text alignment
+         */
+        .text--left {
+          text-align: left !important; }
+        
+        .text--center {
+          text-align: center !important; }
+        
+        .text--right {
+          text-align: right !important; }
+        
+        /**
+         * Full height element
+         */
+        .full-height {
+          height: 100% !important; }
+        
+        /**
+         * Add a help cursor to any element that gives the user extra information on
+         * `:hover`.
+         */
+        .informative {
+          cursor: help !important; }
+        
+        /**
+         * Add a pointer cursor to any element, useful for on-click events
+         */
+        .pointer {
+          cursor: pointer !important; }
+        
+        /**
+         * Mute an object by reducing its opacity.
+         */
+        .muted {
+          opacity: 0.5 !important; }
+        
+        /**
+         * Align items to the right where they imply progression/movement forward, e.g.:
+         *
+         * <p class=proceed><a href=#>Read more...</a></p>
+         *
+         */
+        .proceed {
+          text-align: right !important; }
+        
+        /**
+         * Apply capital case to an element (usually a `strong`).
+         */
+        .caps {
+          text-transform: uppercase !important; }
+        
+        /**
+         * Hide visually and from screen readers:
+         * http://juicystudio.com/article/screen-readers-display-none.php
+         */
+        .hidden {
+          display: none !important;
+          visibility: hidden; }
+        
+        /**
+         * Hide content off-screen without resorting to `display:none;`
+         */
+        .a11y,
+        .visuallyhidden {
+          position: absolute !important;
+          overflow: hidden !important;
+          width: 1px !important;
+          height: 1px !important;
+          margin: -1px !important;
+          border: 0 !important;
+          padding: 0 !important;
+          clip: rect(0 0 0 0) !important; }
+        
+        .a11y.focusable:active, .a11y.focusable:focus,
+        .visuallyhidden.focusable:active,
+        .visuallyhidden.focusable:focus {
+          position: static;
+          overflow: visible;
+          width: auto;
+          height: auto;
+          margin: 0;
+          clip: auto; }
+        
+        @media screen and (min-width: 45em) and (max-width: 63.9375em) {
+          .a11y-lap,
+          .visuallyhidden-lap {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (max-width: 63.9375em) {
+          .a11y-portable,
+          .visuallyhidden-portable {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (min-width: 64em) {
+          .a11y-desk,
+          .visuallyhidden-desk {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (max-width: 44.9375em) {
+          .a11y-palm,
+          .visuallyhidden-palm {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (min-width: 45em) {
+          .a11y-lap-and-up,
+          .visuallyhidden-lap-and-up {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (min-width: 64em) {
+          .a11y-desk-and-up,
+          .visuallyhidden-desk-and-up {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media screen and (min-width: 120em) {
+          .a11y-large-and-up,
+          .visuallyhidden-large-and-up {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+          .a11y-retina,
+          .visuallyhidden-retina {
+            position: absolute !important;
+            overflow: hidden !important;
+            width: 1px !important;
+            height: 1px !important;
+            margin: -1px !important;
+            border: 0 !important;
+            padding: 0 !important;
+            clip: rect(0 0 0 0) !important; } }
+        
+        /**
+         * Hide visually and from screen readers, but maintain layout
+         */
+        .invisible {
+          visibility: hidden !important; }
+        
+        /**
+         * Truncate text with an ellipsis
+         */
+        .truncate {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
+        
+        /**
+         * A series of width helper classes that you can use to size things like grid
+         * systems. Classes can take a fraction-like format (e.g. `.u-2/3`) or a spoken-
+         * word format (e.g. `.u-2-of-3`).
+         */
+        .u-1\/1 {
+          width: 100% !important; }
+        
+        .u-1\/2 {
+          width: 50% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-1\/3 {
+          width: 33.33333% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-2\/3 {
+          width: 66.66667% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-1\/4 {
+          width: 25% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-2\/4 {
+          width: 50% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-3\/4 {
+          width: 75% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-1\/6 {
+          width: 16.66667% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-2\/6 {
+          width: 33.33333% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-3\/6 {
+          width: 50% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-4\/6 {
+          width: 66.66667% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        .u-5\/6 {
+          width: 83.33333% !important;
+          -webkit-box-flex: 0 !important;
+              -ms-flex: none !important;
+                  flex: none !important; }
+        
+        @media screen and (min-width: 45em) and (max-width: 63.9375em) {
+          .u-1\/1-lap {
+            width: 100% !important; }
+          .u-1\/2-lap {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-lap {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-lap {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-lap {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-lap {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-lap {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-lap {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-lap {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-lap {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-lap {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-lap {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (max-width: 63.9375em) {
+          .u-1\/1-portable {
+            width: 100% !important; }
+          .u-1\/2-portable {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-portable {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-portable {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-portable {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-portable {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-portable {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-portable {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-portable {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-portable {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-portable {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-portable {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (min-width: 64em) {
+          .u-1\/1-desk {
+            width: 100% !important; }
+          .u-1\/2-desk {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-desk {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-desk {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-desk {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-desk {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-desk {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-desk {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-desk {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-desk {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-desk {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-desk {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (max-width: 44.9375em) {
+          .u-1\/1-palm {
+            width: 100% !important; }
+          .u-1\/2-palm {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-palm {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-palm {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-palm {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-palm {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-palm {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-palm {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-palm {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-palm {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-palm {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-palm {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (min-width: 45em) {
+          .u-1\/1-lap-and-up {
+            width: 100% !important; }
+          .u-1\/2-lap-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-lap-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-lap-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-lap-and-up {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-lap-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-lap-and-up {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-lap-and-up {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-lap-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-lap-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-lap-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-lap-and-up {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (min-width: 64em) {
+          .u-1\/1-desk-and-up {
+            width: 100% !important; }
+          .u-1\/2-desk-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-desk-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-desk-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-desk-and-up {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-desk-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-desk-and-up {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-desk-and-up {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-desk-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-desk-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-desk-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-desk-and-up {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media screen and (min-width: 120em) {
+          .u-1\/1-large-and-up {
+            width: 100% !important; }
+          .u-1\/2-large-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-large-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-large-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-large-and-up {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-large-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-large-and-up {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-large-and-up {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-large-and-up {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-large-and-up {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-large-and-up {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-large-and-up {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+          .u-1\/1-retina {
+            width: 100% !important; }
+          .u-1\/2-retina {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/3-retina {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/3-retina {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/4-retina {
+            width: 25% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/4-retina {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/4-retina {
+            width: 75% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-1\/6-retina {
+            width: 16.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-2\/6-retina {
+            width: 33.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-3\/6-retina {
+            width: 50% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-4\/6-retina {
+            width: 66.66667% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; }
+          .u-5\/6-retina {
+            width: 83.33333% !important;
+            -webkit-box-flex: 0 !important;
+                -ms-flex: none !important;
+                    flex: none !important; } }
+        
+        </style>
+        </template>
+        </dom-module>

@@ -16,7 +16,7 @@
     ],
     "builds": [
       {
-        "name": "es5-basic",
+        "name": "default",
         "js": {"compile": true, "minify": true},
         "bundle": true
       }
