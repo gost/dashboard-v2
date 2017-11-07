@@ -14,6 +14,8 @@
 <link rel="import" href="../../bower_components/px-icon-set/px-icon.html">
 <link rel="import" href="../../bower_components/px-icon-set/px-icon-set.html">
 
+<link rel="import" href="../../bower_components/st-core/st-settings.html">
+
 <link rel="import" href="../dashboard-header/dashboard-header.html">
 
 <dom-module id="seed-app">
@@ -53,7 +55,7 @@
         <px-view id="view" element-href="{{getHref(navRoute)}}" active load-async></px-view>
       </main>
     </div>
-
+    <st-settings></st-settings>
   </template>
   <script>
     Polymer({
