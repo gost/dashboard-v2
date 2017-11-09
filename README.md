@@ -21,7 +21,7 @@ $ docker build -t geodan/gost-dashboard-v2 .
 Docker run:
 
 ```
-$ docker run -p 5000:5000 geodan/gost-dashboard-v2
+$ docker run -p 8080:8080 geodan/gost-dashboard-v2
 ```
 
 ## Install the dependencies
