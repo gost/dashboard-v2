@@ -66,7 +66,15 @@
             </px-map>
         </div>
         <px-card class="card" header-text="Things({{thingid}})/Datastreams" icon="px-nav:hierarchy">
-            <st-table id="table" arraytype="datastreams" count="{{datastreamcount}}" tabledata="[[datastreams]]" top="{{datastreamtop}}" skip="{{datastreamskip}}" on-request="_tableDataRequest" ><st-table>
+            <st-table 
+                id="table" 
+                arraytype="datastreams" 
+                count="{{datastreamcount}}" 
+                tabledata="[[datastreams]]" 
+                top="{{datastreamtop}}" 
+                skip="{{datastreamskip}}" 
+                on-request="_tableDataRequest" 
+                on-px-table-row-tap="_rowSelected"><st-table>
         </px-card> 
           
         <st-entity-thing id="entity" rawreceived="{{thing}}" gid="{{thingid}}"></st-entity-thing>
@@ -101,6 +109,10 @@
                     type: Array,
                     notify: true,
                     observer: '_locationsReceived'
+                },
+                selecteddatastream: {
+                    type: Object,
+                    notify: true
                 },
                 datastreams: {
                     type: Array,
@@ -204,6 +216,10 @@
                 }
 
                 this.locationsdetails = locationsdetails;   
+            },
+            _rowSelected(evt) {          
+                this.selecteddatastream = null;                
+                this.selecteddatastream = evt.srcElement;
             },
             load(id){
                 if(!this.thing){

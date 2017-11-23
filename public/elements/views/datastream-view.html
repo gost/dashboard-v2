@@ -1,8 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-popover/px-popover.html">
+<link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
+<link rel="import" href="../../bower_components/px-datetime-range-panel/px-datetime-range-panel.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-observedproperty.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastream.html">
 
 <link rel="import" href="../controls/st-table.html">
@@ -10,7 +16,7 @@
 <link rel="import" href="../controls/st-entity-details.html">
 
 <link rel="import" href="../../css/globalstyle.html" />
-<link rel="import" href="thing-view-styles.html" />
+<link rel="import" href="datastream-view-styles.html" />
 
 <dom-module id="datastream-view">
     <template>       
@@ -30,15 +36,79 @@
                 padding-bottom: 2rem;
             }
 
+            div#chartwrapper{
+                margin-left: 20px;
+                margin-right: 20px;
+                margin-top: 30px;
+                margin-bottom: 5px;
+            }
+
+            div#chartwrapper p {
+                line-height: 0px;
+            }
+
+            div#chartwrapper p.texthead{
+                font-size: 20px;
+                font-weight: 600;                
+            }
+
+            div#chartwrapper p.textsub{
+                font-size: 14px;
+                font-weight: 200;                
+            }
+
         </style>   
         <style include="datastream-view-styles"></style> 
         <style include="globalstyle"></style> 
 
-        <px-card class="card" header-text="Chart" icon="px-nav:hierarchy">
-            <st-chart id="chart" ><st-chart>
+        <div id="chartwrapper">
+            <p class="texthead">{{datastream.name}}</p>
+            <p class="textsub">{{datastream.description}}</p>
+            <st-chart id="chart" uom="{{datastream.unitOfMeasurement.symbol}}"></st-chart>
+            <px-dropdown
+                items="{{dropdownItems}}"
+                sort-mode="key"
+                button-style="default"                    
+                selected="{{selectedDropdown}}"
+                disable-clear>
+            </px-dropdown>
+        </div>
+      <!-- <button class='btn btn--tertiary' id='btnFilterDt' type='button' name='button'>filter date time</button>
+            <px-datetime-range-panel 
+                show-buttons 
+                time-format="HH:mm:ss" time-zone="UTC" min="2011-11-13T14:31:02.976Z" max="2027-11-27T14:31:02.976Z">
+            </px-datetime-range-panel> -->
+
+        <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+            <px-card class="card flex__item flex__item--top" header-text="Datastreams({{datastreamid}})" icon="px-nav:hierarchy">  
+                <st-entity-details details="{{datastreamdetails}}"></st-entity-details>
+            </px-card>
+
+
+        </div>
+
+        <px-card class="card" header-text="Datastreams({{datastreamid}})/Sensor" icon="px-nav:hierarchy">
+            <st-table 
+                arraytype="sensors"
+                tabledata="[[sensors]]" 
+                on-px-table-row-tap="_rowSelectedSensor" 
+                showpaging="false">
+            <st-table>
+        </px-card> 
+
+        <px-card class="card" header-text="Datastreams({{datastreamid}})/ObservedProperty" icon="px-nav:hierarchy">
+            <st-table 
+                arraytype="observedproperties"
+                tabledata="[[observedproperties]]" 
+                on-px-table-row-tap="_rowSelectedObservedProperty" 
+                showpaging="false">
+            <st-table>
         </px-card> 
                   
         <st-entity-datastream id="entity" gid="{{datastreamid}}" rawreceived="{{datastream}}"></st-entity-datastream>
+        <st-entity-sensor id="entitysensor" datastreamid={{datastreamid}} rawreceived="{{sensor}}">
+        <st-entity-observedproperty id="entityobservedproperty" datastreamid={{datastreamid}} rawreceived="{{observedproperty}}">
+        <st-entity-thing id="entitything" datastreamid={{datastreamid}} rawreceived="{{thing}}">
         <st-entity-observations id="entityobservations" datastreamid="{{datastreamid}}" odata="[[observationodata]]" collection="{{observations}}"></st-entity-observations>
     </template>
 
@@ -51,22 +121,46 @@
                     notify: true,
                     observer: '_datastreamSet'
                 },     
+                dropdownItems: {
+                    type: Array,
+                    value: [
+                        {"key": "1", "val": "10"},
+                        {"key": "2", "val": "20"},
+                        {"key": "3", "val": "40"},
+                        {"key": "4", "val": "80"},
+                        {"key": "5", "val": "100"}
+                    ]
+                },
+                selectedDropdown: {
+                    type: Object,
+                    value: "2",
+                    observer: "_dropdownValueChanged"
+                },
                 datastreamid: {
                     type: String,
                     notify: true
                 },    
-                datastreamdetails: {
-                    type: Array,
-                    notify: true,
-                    value: []
-                },
                 observationodata: {
-                    type: Object
+                    type: Object,
+                    value: function() { 
+                        return { skip: 0, count: true, top: 20, select: ['result', 'phenomenonTime'] }; 
+                    }  
+                },
+                sensor: {
+                    type: Object,
+                    notify: true,
+                    observer: "_sensorReceived"             
+                },
+                observedproperty: {
+                    type: Object,
+                    notify: true,
+                    observer: "_observedPropertyReceived"      
                 },
                 observations: {
                     type: Array,
                     notify: true,
-                    observer: '_observationsReceived'
+                    observer: '_observationsReceived',
+                    value: function() {return []; }
                 }
             },
             _datastreamSet(datastream){
@@ -74,14 +168,39 @@
                     return;
                 }
                 
-                this.datastreamid = this._getID(datastream);                
-                this.$.entityobservations.get();
+                this.$.chart.reset();
+                this.datastreamid = this._getID(datastream);   
+                this.datastreamdetails = [
+                    { label: "id", value: this._getID(datastream), write: false, type: "text" },
+                    { label: "name", value: datastream.name, write: false, type: "text" },
+                    { label: "description", value: datastream.description, write: false, type: "text" },
+                    { label: "unitOfMeasurement", value: datastream.unitOfMeasurement, write: false, type: "object" },
+                    { label: "observationType", value: datastream.observationType, write: false, type: "text" },
+                    { label: "phenomenonTime", value: datastream.phenomenonTime, write: false, type: "text" },
+                    { label: "resultTime", value: datastream.resultTime, write: false, type: "text" }
+                ]
+
+                this.$.entityobservations.get();       
+                this.$.entitysensor.get();       
+                this.$.entityobservedproperty.get();                
             },
             _getID(item){
                 return item['@iot.id'];
             },
             _observationsReceived(){
-                alert('observations received');
+                //alert('observations received');
+                this.$.chart.addObservations(this.observations);
+            },
+            _sensorReceived(sensor){
+                var sensors = [sensor]
+                this.sensors = sensors;
+            },
+            _observedPropertyReceived(op){
+                var observedProperties = [op]
+                this.observedproperties = observedProperties;
+            },
+            _dropdownValueChanged(value){
+
             },
             load(id){
                 if(!this.datastream){
