@@ -87,6 +87,10 @@
                 type: Array,
                 value: function() { return ["chartData"]; }
               },
+              maxobservations:{
+                type: Object,                
+                observer: '_maxObservationsChanged'
+              },
               appliedWidth: {
                 type: Number,
                 value: 400
@@ -283,6 +287,11 @@
               var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
               return time;
             },
+            _maxObservationsChanged(max){
+              if(this.chartData.length > max){
+                this.chartData = this.chartData.splice(0, this.chartData.length - max);
+              }
+            },
             reset(){
               this.chartData = [];
             },
@@ -303,8 +312,14 @@
                 chartData.push(d);
               }
 
-              chartData.sort(function(a,b) {return (a.tick > b.tick) ? 1 : ((b.tick > a.tick) ? -1 : 0);} ); 
-              this.chartData = this.chartData.concat(chartData);
+              
+              var newData = this.chartData.concat(chartData);
+              newData.sort(function(a,b) {return (a.tick > b.tick) ? 1 : ((b.tick > a.tick) ? -1 : 0);} ); 
+              if(newData.length > this.maxobservations){
+                newData = newData.splice(0, newData.length - this.maxobservations);
+              }
+
+              this.chartData = newData;
             }   
         });
     </script>

@@ -64,7 +64,7 @@
         <div id="chartwrapper">
             <p class="texthead">{{datastream.name}}</p>
             <p class="textsub">{{datastream.description}}</p>
-            <st-chart id="chart" uom="{{datastream.unitOfMeasurement.symbol}}"></st-chart>
+            <st-chart id="chart" uom="{{datastream.unitOfMeasurement.symbol}}" maxobservations="{{maxobservations}}"></st-chart>
             <px-dropdown
                 items="{{dropdownItems}}"
                 sort-mode="key"
@@ -121,20 +121,12 @@
                     notify: true,
                     observer: '_datastreamSet'
                 },     
-                dropdownItems: {
-                    type: Array,
-                    value: [
-                        {"key": "1", "val": "10"},
-                        {"key": "2", "val": "20"},
-                        {"key": "3", "val": "40"},
-                        {"key": "4", "val": "80"},
-                        {"key": "5", "val": "100"}
-                    ]
-                },
-                selectedDropdown: {
+                maxobservations: {
                     type: Object,
-                    value: "2",
-                    observer: "_dropdownValueChanged"
+                    notify: true,
+                    value: function(){
+                        return 20;
+                    }
                 },
                 datastreamid: {
                     type: String,
@@ -143,7 +135,7 @@
                 observationodata: {
                     type: Object,
                     value: function() { 
-                        return { skip: 0, count: true, top: 20, select: ['result', 'phenomenonTime'] }; 
+                        return { skip: 0, count: false, top: 20, select: ['result', 'phenomenonTime'] }; 
                     }  
                 },
                 sensor: {
@@ -161,6 +153,22 @@
                     notify: true,
                     observer: '_observationsReceived',
                     value: function() {return []; }
+                },
+                dropdownItems: {
+                    type: Array,
+                    value: [
+                        {"key": "0", "val": "10"},
+                        {"key": "1", "val": "20"},
+                        {"key": "2", "val": "40"},
+                        {"key": "3", "val": "80"},
+                        {"key": "4", "val": "100"},
+                        {"key": "5", "val": "200"}
+                    ]
+                },
+                selectedDropdown: {
+                    type: Object,
+                    value: "1",
+                    observer: "_dropdownValueChanged"
                 }
             },
             _datastreamSet(datastream){
@@ -187,9 +195,19 @@
             _getID(item){
                 return item['@iot.id'];
             },
-            _observationsReceived(){
-                //alert('observations received');
-                this.$.chart.addObservations(this.observations);
+            _observationsReceived(){ 
+                if(!this.chartobservations)        {
+                    this.chartobservations = [];
+                }
+                
+                this.observationCount = this.observationCount + this.observations.length;
+                this.chartobservations = this.chartobservations.concat(this.observations);
+
+                if(this.chartobservations.length < this.maxobservations && this.$.entityobservations.nextlink){                    
+                    this.$.entityobservations.getNextPage();
+                } else {
+                    this.$.chart.addObservations(this.chartobservations);
+                }
             },
             _sensorReceived(sensor){
                 var sensors = [sensor]
@@ -199,14 +217,25 @@
                 var observedProperties = [op]
                 this.observedproperties = observedProperties;
             },
-            _dropdownValueChanged(value){
+            _dropdownValueChanged(value){   
+                if(!this.datastream){
+                    return;
+                }
 
+                this.chartobservations = [];             
+                this.maxobservations = Number(this.dropdownItems[Number(value)].val);                
+                this.observationodata.top = this.maxobservations;
+                this.$.chart.reset();
+                this.$.entityobservations.get();   
             },
             load(id){
                 if(!this.datastream){
                     this.datastreamid = id;
                     this.$.entity.get();
                 }
+            },
+            ready(){
+                this.chartobservations = [];
             }
         });
     </script>
