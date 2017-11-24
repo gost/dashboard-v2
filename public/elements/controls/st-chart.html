@@ -21,7 +21,7 @@
         <div style="width:100%; height:450px">
             <div style="height:95%">
               <div id="mouseOverDiv">
-                <p><b>{{mouseOverValueResult}} {{uom}}</b></p>
+                <p><b>{{mouseOverValueResult}}</b></p>
                 <p>{{mouseOverValueDate}}</p>
               </div>
               <px-vis-xy-chart
@@ -270,9 +270,10 @@
                 var observation = data.detail.value.series[0].value;
                 var dtString = this._unixToDateTime(observation.tick);
                 this.mouseOverValueDate = dtString;
-                this.mouseOverValueResult = observation.result;                
+                this.mouseOverValueResult = observation.result + " " + this.uom;                
               }else{
-                this.mouseOverValue = "";
+                this.mouseOverValueDate = "";
+                this.mouseOverValueResult = "";
               }
             },
             _unixToDateTime(timeStamp){

@@ -2,10 +2,9 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-toggle/px-toggle.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
-<link rel="import" href="../../bower_components/px-popover/px-popover.html">
-<link rel="import" href="../../bower_components/px-accordion/px-accordion.html">
-<link rel="import" href="../../bower_components/px-datetime-range-panel/px-datetime-range-panel.html">
+
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-observedproperty.html">
@@ -57,6 +56,15 @@
                 font-weight: 200;                
             }
 
+            .horizontal {
+                margin: 0;
+                padding: 0;
+            }
+
+            .horizontal li {
+                display: inline-block;
+            }
+
         </style>   
         <style include="datastream-view-styles"></style> 
         <style include="globalstyle"></style> 
@@ -65,13 +73,20 @@
             <p class="texthead">{{datastream.name}}</p>
             <p class="textsub">{{datastream.description}}</p>
             <st-chart id="chart" uom="{{datastream.unitOfMeasurement.symbol}}" maxobservations="{{maxobservations}}"></st-chart>
-            <px-dropdown
-                items="{{dropdownItems}}"
-                sort-mode="key"
-                button-style="default"                    
-                selected="{{selectedDropdown}}"
-                disable-clear>
-            </px-dropdown>
+            <ul class="horizontal">
+                <li>
+                    <px-dropdown
+                        items="{{dropdownItems}}"
+                        sort-mode="key"
+                        button-style="default"                    
+                        selected="{{selectedDropdown}}"
+                        disable-clear>
+                    </px-dropdown>
+                </li>
+                <li>            
+                    <px-toggle size="regular"></px-toggle>
+                </li>                
+            </ul>
         </div>
       <!-- <button class='btn btn--tertiary' id='btnFilterDt' type='button' name='button'>filter date time</button>
             <px-datetime-range-panel 
@@ -199,7 +214,7 @@
                 if(!this.chartobservations)        {
                     this.chartobservations = [];
                 }
-                
+
                 this.observationCount = this.observationCount + this.observations.length;
                 this.chartobservations = this.chartobservations.concat(this.observations);
 
