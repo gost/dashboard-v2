@@ -283,12 +283,14 @@
 
                 this.chartobservations = [];             
                 this.maxobservations = Number(this.dropdownItems[Number(value)].val);                
+                this.observationodata.skip = 0;
                 this.observationodata.top = this.maxobservations;
                 this.$.chart.reset();
                 this.$.entityobservations.get();   
             },
             _messageArrived(msg) {
-                console.log("Received message: " + msg.detail);
+                observation = [JSON.parse(msg.detail.payloadString)];                
+                this.$.chart.addObservations(observation);
             },
             _mqttSubscribe(){
                 this.mqttSubscriptions = [

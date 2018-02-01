@@ -312,12 +312,11 @@
 
                 chartData.push(d);
               }
-
               
               var newData = this.chartData.concat(chartData);
               newData.sort(function(a,b) {return (a.tick > b.tick) ? 1 : ((b.tick > a.tick) ? -1 : 0);} ); 
               if(newData.length > this.maxobservations){
-                newData = newData.splice(0, newData.length - this.maxobservations);
+                newData = newData.splice(newData.length - this.maxobservations, this.maxobservations);
               }
 
               this.chartData = newData;
