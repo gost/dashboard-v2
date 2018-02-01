@@ -34,7 +34,7 @@
     "body-parser": "^1.15.2",
     "bower": "^1.8.2",
     "compression": "^1.6.2",
-    "connect-redis": "^3.2.0",
+    "connect-redis": "^3.3.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-http-proxy": "^0.10.0",

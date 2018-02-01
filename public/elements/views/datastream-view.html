@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/px-toggle/px-toggle.html">
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 
+<link rel="import" href="../../bower_components/mqtt-client/mqtt-client.html">
+
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-observedproperty.html">
@@ -69,7 +71,7 @@
         <style include="datastream-view-styles"></style> 
         <style include="globalstyle"></style> 
 
-        <div id="chartwrapper">
+        <div id="chartwrapper" >
             <p class="texthead">{{datastream.name}}</p>
             <p class="textsub">{{datastream.description}}</p>
             <st-chart id="chart" uom="{{datastream.unitOfMeasurement.symbol}}" maxobservations="{{maxobservations}}"></st-chart>
@@ -98,8 +100,6 @@
             <px-card class="card flex__item flex__item--top" header-text="Datastreams({{datastreamid}})" icon="px-nav:hierarchy">  
                 <st-entity-details details="{{datastreamdetails}}"></st-entity-details>
             </px-card>
-
-
         </div>
 
         <px-card class="card" header-text="Datastreams({{datastreamid}})/Sensor" icon="px-nav:hierarchy">
@@ -125,8 +125,19 @@
         <st-entity-observedproperty id="entityobservedproperty" datastreamid={{datastreamid}} rawreceived="{{observedproperty}}">
         <st-entity-thing id="entitything" datastreamid={{datastreamid}} rawreceived="{{thing}}">
         <st-entity-observations id="entityobservations" datastreamid="{{datastreamid}}" odata="[[observationodata]]" collection="{{observations}}"></st-entity-observations>
-    </template>
 
+        <mqtt-client id="mqtt" 
+            autoConnect="[[mqttAutoConnect]]"
+            host="[[mqttHost]]" 
+            port="[[mqttPort]]" 
+            path="[[mqttPath]]"
+            username="[[mqttUsername]]"
+            password="[[mqttPassword]]"
+            ssl="[[mqttSSL]]"
+            subscriptions="[[mqttSubscriptions]]"
+            on-messagearrived='_messageArrived'>
+        </mqtt-client>
+    </template>
     <script>
         Polymer({
             is: 'datastream-view',
@@ -156,34 +167,65 @@
                 sensor: {
                     type: Object,
                     notify: true,
-                    observer: "_sensorReceived"             
+                    observer: '_sensorReceived'             
                 },
                 observedproperty: {
                     type: Object,
                     notify: true,
-                    observer: "_observedPropertyReceived"      
+                    observer: '_observedPropertyReceived'
                 },
                 observations: {
                     type: Array,
                     notify: true,
                     observer: '_observationsReceived',
-                    value: function() {return []; }
+                    value: function() { return []; }
                 },
                 dropdownItems: {
                     type: Array,
                     value: [
-                        {"key": "0", "val": "10"},
-                        {"key": "1", "val": "20"},
-                        {"key": "2", "val": "40"},
-                        {"key": "3", "val": "80"},
-                        {"key": "4", "val": "100"},
-                        {"key": "5", "val": "200"}
+                        {'key': '0', 'val': '10'},
+                        {'key': '1', 'val': '20'},
+                        {'key': '2', 'val': '40'},
+                        {'key': '3', 'val': '80'},
+                        {'key': '4', 'val': '100'},
+                        {'key': '5', 'val': '200'}
                     ]
                 },
                 selectedDropdown: {
                     type: Object,
-                    value: "1",
-                    observer: "_dropdownValueChanged"
+                    value: '1',
+                    observer: '_dropdownValueChanged'
+                },
+
+                // MQTT 
+                mqttAutoConnect: {
+                    type: Boolean,
+                    value: true
+                },
+                mqttSubscriptions: {
+                    type: Array,
+                    notify: true,
+                    value: []
+                },
+                mqttHost: {
+                    type: String,
+                    value: window.st.mqtt.host
+                },
+                mqttPort: {
+                    type: Number,
+                    value: window.st.mqtt.port
+                },
+                mqttSSL: {
+                    type: Boolean,
+                    value: window.st.mqtt.ssl
+                },
+                mqttUsername: {
+                    type: String,
+                    value: window.st.mqtt.username
+                },
+                mqttPassword: {
+                    type: String,
+                    value: window.st.mqtt.password
                 }
             },
             _datastreamSet(datastream){
@@ -203,9 +245,11 @@
                     { label: "resultTime", value: datastream.resultTime, write: false, type: "text" }
                 ]
 
-                this.$.entityobservations.get();       
+                this.$.entityobservations.get();
                 this.$.entitysensor.get();       
-                this.$.entityobservedproperty.get();                
+                this.$.entityobservedproperty.get();
+
+                this._mqttSubscribe();              
             },
             _getID(item){
                 return item['@iot.id'];
@@ -225,11 +269,11 @@
                 }
             },
             _sensorReceived(sensor){
-                var sensors = [sensor]
+                var sensors = [sensor];
                 this.sensors = sensors;
             },
             _observedPropertyReceived(op){
-                var observedProperties = [op]
+                var observedProperties = [op];
                 this.observedproperties = observedProperties;
             },
             _dropdownValueChanged(value){   
@@ -243,6 +287,19 @@
                 this.$.chart.reset();
                 this.$.entityobservations.get();   
             },
+            _messageArrived(msg) {
+                console.log("Received message: " + msg.detail);
+            },
+            _mqttSubscribe(){
+                this.mqttSubscriptions = [
+                    {
+                        topic: "Datastreams(" + this.datastreamid + ")/Observations",
+                        qos: 1
+                    }
+                ]
+
+                this.$.mqtt.connect();
+            },
             load(id){
                 if(!this.datastream){
                     this.datastreamid = id;
@@ -250,7 +307,7 @@
                 }
             },
             ready(){
-                this.chartobservations = [];
+                this.chartobservations = [];                
             }
         });
     </script>

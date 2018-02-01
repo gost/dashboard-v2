@@ -1,4 +1,10 @@
 {
     "endpoint": "https://gost.geodan.nl/v1.0",
-    "maxEntities": 20
+    "maxEntities": 20,
+    "mqtt": {
+        "host": "gost.geodan.nl",
+        "port": 9002,
+        "path": "",
+        "ssl": true
+    }
 }
