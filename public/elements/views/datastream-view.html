@@ -232,7 +232,9 @@
                 if(!datastream){
                     return;
                 }
-                
+
+                this.chartobservations = [];                
+                this.observationodata.skip = 0;
                 this.$.chart.reset();
                 this.datastreamid = this._getID(datastream);   
                 this.datastreamdetails = [
@@ -255,11 +257,9 @@
                 return item['@iot.id'];
             },
             _observationsReceived(){ 
-                if(!this.chartobservations)        {
-                    this.chartobservations = [];
-                }
+                if (!this.chartobservations)
+                    return;
 
-                this.observationCount = this.observationCount + this.observations.length;
                 this.chartobservations = this.chartobservations.concat(this.observations);
 
                 if(this.chartobservations.length < this.maxobservations && this.$.entityobservations.nextlink){                    
@@ -286,7 +286,7 @@
                 this.observationodata.skip = 0;
                 this.observationodata.top = this.maxobservations;
                 this.$.chart.reset();
-                this.$.entityobservations.get();   
+                this.$.entityobservations.get();
             },
             _messageArrived(msg) {
                 observation = [JSON.parse(msg.detail.payloadString)];                

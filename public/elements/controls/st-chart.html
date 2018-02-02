@@ -168,7 +168,7 @@
               },
               hardMute: {
                 type: Boolean,
-                value: true
+                value: false
               },
               chartData: {
                 type: Array,                
@@ -183,7 +183,7 @@
                   "firstSerie": {
                     "type": "line",
                     "mutedOpacity": "0.4",
-                    "strokeWidth": "1.5",
+                    "strokeWidth": "1.8",
                     "name": "Serie1",
                     "x": "tick",
                     "y": "result"
@@ -192,7 +192,7 @@
                     "type": "scatter",
                     "markerSymbol": "circle",
                     "markerSize": "20",
-                    "markerScale": "1",
+                    "markerScale": "1.7",
                     "markerFillOpacity": "0.8",
                     "markerStrokeOpacity": "1",
                     "strokeWidth": "1",
@@ -301,12 +301,12 @@
 
               for(var i = 0; i < observations.length; i++){                
                 var observation = observations[i];
-                var test = new Date(observation.phenomenonTime);
-                var unixTime = test.getTime();
-                var timezoneOffset = test.getTimezoneOffset();
+                var dt = new Date(observation.phenomenonTime);
+                var unixTime = dt.getTime();
+                var timezoneOffset = dt.getTimezoneOffset();
                 var time = unixTime - (timezoneOffset * 60000);
                 var d = { 
-                  "tick": "" + time,
+                  "tick": time,
                   "result": observation.result 
                 }
 
