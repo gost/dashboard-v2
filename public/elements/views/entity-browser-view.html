@@ -14,6 +14,7 @@
 <link rel="import" href="location-view.html" />
 <link rel="import" href="historicallocation-view.html" />
 <link rel="import" href="datastream-view.html" />
+<link rel="import" href="sensor-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -57,6 +58,7 @@
       <location-view id="locationview" name="{{pages.locations.single}}" location="{{selectedlocation}}" selectedhistoricallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"></location-view>
       <historicallocation-view id="historicallocationview" name="{{pages.historicallocations.single}}" historicallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"  selectedlocation="{{selectedlocation}}"></historicallocation-view>
       <datastream-view id="datastreamview" name="{{pages.datastreams.single}}" datastream="{{selecteddatastream}}"></datastream-view>
+      <sensor-view id="sensorview" name="{{pages.sensors.single}}" sensor="{{selectedsensor}}"></sensor-view>
     </iron-pages>
 
   </template>
@@ -136,7 +138,7 @@
           observer: '_routeChanged'
         }
       }, 
-      _selectedTabChanged(){
+      _selectedTabChanged(evt){
         switch(this.selectedtab) {
           case this.pages.things.array:
             this.$.thingsview.load();            
@@ -164,7 +166,9 @@
             break;
         }
 
-        this._setUrl(this.selectedtab);
+        if(this.selectedtab != this.currententity || evt.type == 'click'){
+          this._setUrl(this.selectedtab);
+        }
       },
       _selectedPageChanged(selected){
         switch(selected) {
@@ -179,6 +183,9 @@
             break;
           case this.pages.datastreams.single:
             this.$.datastreamview.load(this.currentid);
+            break;
+          case this.pages.sensors.single:
+            this.$.sensorview.load(this.currentid);
             break;
         }
       },

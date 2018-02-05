@@ -1,0 +1,155 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-map/px-map.html">
+<link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
+<link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
+<link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
+
+<link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../controls/st-entity-details.html">
+
+<link rel="import" href="../../css/globalstyle.html" />
+<link rel="import" href="sensor-view-styles.html" />
+
+<dom-module id="sensor-view">
+    <template>       
+        
+        <style>       
+            :host {
+                --px-card-background-color: #111F27;
+            }
+
+            body {
+                background-color: #111F27;
+            }
+
+            .card {
+                padding-top: 20px;
+                min-width: 400px;
+                padding-bottom: 2rem;
+            }
+
+        </style>   
+        <style include="location-view-styles"></style> 
+        <style include="globalstyle"></style> 
+        <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                              
+            <px-card class="card flex__item flex__item--top" header-text="Sensors({{sensorid}})" icon="px-nav:hierarchy">  
+                <st-entity-details details="{{sensordetails}}"></st-entity-details>
+            </px-card>     
+        </div>   
+
+        <px-card class="card" header-text="Sensors({{sensorid}})/Datastreams" icon="px-nav:hierarchy">
+            <st-table 
+                id="table" 
+                arraytype="sensors" 
+                count="{{datastreamscount}}" 
+                tabledata="[[datastreams]]" 
+                top="{{datastreamstop}}" 
+                skip="{{datastreamsskip}}" 
+                on-request="_tableDataRequestDatastreams"
+                on-px-table-row-tap="_rowSelectedDatastream" >
+            <st-table>
+        </px-card> 
+          
+        <st-entity-sensor id="entity" rawreceived="{{sensor}}" gid="{{sensorid}}"></st-entity-sensor>
+        <st-entity-datastreams 
+            id="entitydatastreams" 
+            sensorid="[[sensorid]]" 
+            collection="{{datastreams}}" 
+            odata="[[datastreamsodata]]" 
+            count="{{datastreamscount}}">
+        </st-entity-datastreams>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'sensor-view',
+            properties: {
+                sensor: {
+                    type: Object,
+                    notify: true,
+                    observer: '_sensorSet'                 
+                },     
+                sensorid: {
+                    type: String,
+                    notify: true
+                },    
+                sensordetails: {
+                    type: Array,
+                    notify: true,
+                    value: []
+                },
+                datastreams: {
+                    type: Array,
+                    notify: true
+                },
+                datastreamsodata: {
+                    type: Object,
+                    value: function() { 
+                        return { skip: 0, count: true, top: 10 }; 
+                    } 
+                },
+                datastreamscount: {
+                    type: Number,
+                    notify: true
+                },
+                datastreamstop: {
+                    type: Number,
+                    value: 10,
+                    notify: true
+                },
+                datastreamsskip: {
+                    type: Number,
+                    value: 0,
+                    notify: true
+                },
+                selecteddatastream: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            _getID(item){
+                return item['@iot.id'];
+            },
+            _sensorSet(sensor){
+                if(!sensor){
+                    return;
+                }
+                
+                // create detail info for entity-detail-view
+                this.sensorid = this._getID(sensor);
+                this.sensordetails = [
+                    { label: "id", value: this._getID(sensor), write: false, type: "text" },
+                    { label: "name", value: sensor.name, write: false, type: "text" },
+                    { label: "description", value: sensor.description, write: false, type: "text" },
+                    { label: "encoding type", value: sensor.encodingType, write: false, type: "text" },
+                    { label: "metadata", value: sensor.metadata, write: false, type: "object" },
+                ]
+
+                // get related entities
+                this.$.entitydatastreams.get();
+            },
+            _tableDataRequestThings(event) {
+                this.datastreamsodata.count = false;
+                this.datastreamsodata.top = event.detail.top;
+                this.datastreamsodata.skip = event.detail.skip;
+                this.$.entitydatastreams.get();
+            },            
+            _rowSelectedDatastream(evt) {
+                this.selectedthing = null;                
+                this.selectedthing = evt.srcElement;
+            },
+            load(id){
+                if(!this.senosr){
+                    this.sensorid = id;
+                    this.$.entity.get();
+                }
+            }
+        });
+    </script>
+</dom-module>
