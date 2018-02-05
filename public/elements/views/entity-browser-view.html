@@ -32,7 +32,7 @@
     <app-location use-hash-as-path route="{{route}}"></app-location>
  
     <div class="tabs-container">
-      <px-tabs attr-for-selected="name" selected="{{selectedtab}}">
+      <px-tabs attr-for-selected="name" selected="{{selectedtab}}" on-click="_selectedTabChanged">
         <px-tab name="{{pages.things.array}}">Things</px-tab>
         <px-tab name="{{pages.locations.array}}">Locations</px-tab>
         <px-tab name="{{pages.historicallocations.array}}">Historical Locations</px-tab>
@@ -136,8 +136,8 @@
           observer: '_routeChanged'
         }
       }, 
-      _selectedTabChanged(selected){
-        switch(selected) {
+      _selectedTabChanged(){
+        switch(this.selectedtab) {
           case this.pages.things.array:
             this.$.thingsview.load();            
             break;
@@ -164,9 +164,9 @@
             break;
         }
 
-        if(selected != this.currententity){
-          this._setUrl(selected);
-        }
+        //if(this.selectedtab != this.currententity){
+          this._setUrl(this.selectedtab);
+        //}
       },
       _selectedPageChanged(selected){
         switch(selected) {
