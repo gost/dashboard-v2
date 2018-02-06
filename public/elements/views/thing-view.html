@@ -9,6 +9,9 @@
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../controls/st-entity-details.html">
@@ -39,10 +42,10 @@
         <style include="globalstyle"></style> 
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
-            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})" icon="px-nav:hierarchy">  
+            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})" icon="hardware:toys">  
                 <st-entity-details details="{{thingdetails}}"></st-entity-details>
-            </px-card>   
-            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})/Locations" icon="px-nav:hierarchy">
+            </px-card>
+            <px-card class="card flex__item flex__item--top" header-text="Things({{thingid}})/Locations" icon="maps:place">
                 <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                     <div class="flex__item flex__item--top" >
                         <template is="dom-repeat" items="{{locationsdetails}}">  
@@ -65,7 +68,7 @@
                 </px-map-layer-geojson>
             </px-map>
         </div>
-        <px-card class="card" header-text="Things({{thingid}})/Datastreams" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="Things({{thingid}})/Datastreams" icon="icons:timeline">
             <st-table 
                 id="table" 
                 arraytype="datastreams" 

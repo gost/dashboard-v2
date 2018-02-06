@@ -142,6 +142,9 @@
             },
             ready(){
                 this.odata.type = this.arraytype;
+                if(this.arraytype == 'datastreams'){                    
+                    this.odata.expand = ["Observations($top=1;$select=result)"];
+                }
             }
         });
     </script>

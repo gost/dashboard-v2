@@ -9,6 +9,8 @@
 <link rel="import" href="../../bower_components/st-core/st-entity-thing.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-locations.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-historicallocation.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../controls/st-entity-details.html">
@@ -39,10 +41,10 @@
         <style include="globalstyle"></style> 
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
-            <px-card class="card flex__item flex__item--top" header-text="HistoricalLocations({{historicallocationid}})" icon="px-nav:hierarchy">  
+            <px-card class="card flex__item flex__item--top" header-text="HistoricalLocations({{historicallocationid}})" icon="maps:place">  
                 <st-entity-details details="{{historicallocationdetails}}"></st-entity-details>
             </px-card>   
-            <px-card class="card flex__item flex__item--top" header-text="Map" icon="px-nav:hierarchy">
+            <px-card class="card flex__item flex__item--top" header-text="Map" icon="maps:map">
                 <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                     <div class="flex__item flex__item--top" >
                         <div id="mapwrapper" style="height:400px; width:100%; display:flex" >                
@@ -63,7 +65,7 @@
             </px-card>   
         </div>   
 
-        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Locations" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Locations" icon="maps:place">
             <st-table              
                 arraytype="locations"
                 tabledata="[[locations]]" 
@@ -72,7 +74,7 @@
             <st-table>
         </px-card> 
 
-        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Thing" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="HistoricalLocations({{historicallocationid}})/Thing" icon="hardware:toys">
             <st-table 
                 arraytype="things"
                 tabledata="[[things]]" 

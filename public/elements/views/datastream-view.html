@@ -12,6 +12,8 @@
 <link rel="import" href="../../bower_components/st-core/st-entity-observedproperty.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastream.html">
 
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../controls/st-chart.html">
 <link rel="import" href="../controls/st-entity-details.html">
@@ -94,12 +96,12 @@
             </px-datetime-range-panel> -->
 
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
-            <px-card class="card flex__item flex__item--top" header-text="Datastreams({{datastreamid}})" icon="px-nav:hierarchy">  
+            <px-card class="card flex__item flex__item--top" header-text="Datastreams({{datastreamid}})" icon="icons:timeline">  
                 <st-entity-details details="{{datastreamdetails}}"></st-entity-details>
             </px-card>
         </div>
 
-        <px-card class="card" header-text="Datastreams({{datastreamid}})/Sensor" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="Datastreams({{datastreamid}})/Sensor" icon="icons:track-changes">
             <st-table 
                 arraytype="sensors"
                 tabledata="[[sensors]]" 
@@ -108,7 +110,7 @@
             <st-table>
         </px-card> 
 
-        <px-card class="card" header-text="Datastreams({{datastreamid}})/ObservedProperty" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="Datastreams({{datastreamid}})/ObservedProperty" icon="icons:visibility">
             <st-table 
                 arraytype="observedproperties"
                 tabledata="[[observedproperties]]" 

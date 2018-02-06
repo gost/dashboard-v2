@@ -8,6 +8,7 @@
 <link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../controls/st-entity-details.html">
@@ -38,12 +39,12 @@
         <style include="globalstyle"></style> 
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
-            <px-card class="card flex__item flex__item--top" header-text="Sensors({{sensorid}})" icon="px-nav:hierarchy">  
+            <px-card class="card flex__item flex__item--top" header-text="Sensors({{sensorid}})" icon="icons:track-changes">  
                 <st-entity-details details="{{sensordetails}}"></st-entity-details>
             </px-card>     
         </div>   
 
-        <px-card class="card" header-text="Sensors({{sensorid}})/Datastreams" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="Sensors({{sensorid}})/Datastreams" icon="icons:timeline">
             <st-table 
                 id="table" 
                 arraytype="datastreams" 
