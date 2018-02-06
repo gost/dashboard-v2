@@ -16,6 +16,7 @@
 <link rel="import" href="datastream-view.html" />
 <link rel="import" href="sensor-view.html" />
 <link rel="import" href="observedproperty-view.html" />
+<link rel="import" href="observation-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -60,7 +61,8 @@
       <historicallocation-view id="historicallocationview" name="{{pages.historicallocations.single}}" historicallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"  selectedlocation="{{selectedlocation}}"></historicallocation-view>
       <datastream-view id="datastreamview" name="{{pages.datastreams.single}}" datastream="{{selecteddatastream}}" selectedsensor="{{selectedsensor}}" selectedobservedproperty="{{selectedobservedproperty}}"></datastream-view>
       <sensor-view id="sensorview" name="{{pages.sensors.single}}" sensor="{{selectedsensor}}" selecteddatastream="{{selecteddatastream}}"></sensor-view>
-      <observedproperty-view id="observedpropertyview" name="{{pages.observedproperties.single}}" observedproperty="{{selectedobservedproperty}}"  selecteddatastream="{{selecteddatastream}}"></observedproperty-view>
+      <observedproperty-view id="observedpropertyview" name="{{pages.observedproperties.single}}" observedproperty="{{selectedobservedproperty}}" selecteddatastream="{{selecteddatastream}}"></observedproperty-view>
+      <observation-view id="observationview" name="{{pages.observations.single}}" observation="{{selectedobservation}}" selecteddatastream="{{selecteddatastream}}" selectedfeatureofinterest="{{selectedfeatureofinterest}}"></observation-view>
     </iron-pages>
 
   </template>
@@ -191,6 +193,9 @@
             break;
           case this.pages.observedproperties.single:
             this.$.observedpropertyview.load(this.currentid);
+            break;
+          case this.pages.observations.single:
+            this.$.observationview.load(this.currentid);
             break;
         }
       },

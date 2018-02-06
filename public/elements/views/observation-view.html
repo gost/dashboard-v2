@@ -1,0 +1,149 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-datastream.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-observation.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-featureofinterest.html">
+<link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
+
+<link rel="import" href="../controls/st-table.html">
+<link rel="import" href="../controls/st-entity-details.html">
+
+<link rel="import" href="../../css/globalstyle.html" />
+<link rel="import" href="observation-view-styles.html" />
+
+<dom-module id="observation-view">
+    <template>       
+        
+        <style>       
+            :host {
+                --px-card-background-color: #111F27;
+            }
+
+            body {
+                background-color: #111F27;
+            }
+
+            .card {
+                padding-top: 20px;
+                min-width: 400px;
+                padding-bottom: 2rem;
+            }
+
+        </style>   
+        <style include="location-view-styles"></style> 
+        <style include="globalstyle"></style> 
+        <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                              
+            <px-card class="card flex__item flex__item--top" header-text="Observations({{observationid}})" icon="icons:track-changes">  
+                <st-entity-details details="{{observationdetails}}"></st-entity-details>
+            </px-card>     
+        </div>   
+        
+        <px-card class="card" header-text="Observations({{observationid}})/Datastream" icon="icons:timeline">
+            <st-table 
+                arraytype="datastreams"
+                tabledata="[[datastreams]]" 
+                on-px-table-row-tap="_rowSelectedDatastream" 
+                showpaging="false">
+            <st-table>
+        </px-card> 
+
+        <px-card class="card" header-text="Observations({{observationid}})/FeatureOfInterest" icon="maps:beenhere">
+            <st-table 
+                arraytype="featuresofinterest"
+                tabledata="[[featuresofinterest]]" 
+                on-px-table-row-tap="_rowSelectedFeatureOfInterest" 
+                showpaging="false">
+            <st-table>
+        </px-card> 
+          
+        <st-entity-observation id="entity" rawreceived="{{observation}}" gid="{{observationid}}"></st-entity-observation>
+        <st-entity-datastream id="entitydatastream" observationid="[[observationid]]" rawreceived="{{datastream}}"></st-entity-datastream>
+        <st-entity-featureofinterest id="entityfeatureofinterest" observationid="[[observationid]]" rawreceived="{{featureofinterest}}"></st-entity-datastream>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'observation-view',
+            properties: {
+                observation: {
+                    type: Object,
+                    notify: true,
+                    observer: '_observationSet'                 
+                },     
+                observationid: {
+                    type: String,
+                    notify: true
+                },    
+                observationdetails: {
+                    type: Array,
+                    notify: true,
+                    value: []
+                },
+                datastream: {
+                    type: Object,
+                    notify: true,
+                    observer: '_datastreamReceived'
+                },
+                featureofinterest: {
+                    type: Object,
+                    notify: true,
+                    observer: '_featureOfInterestReceived'
+                },              
+                selecteddatastream: {
+                    type: Object,
+                    notify: true
+                },
+                selectedfeatureofinterest: {
+                    type: Object,
+                    notify: true
+                }
+            },
+            _getID(item){
+                return item['@iot.id'];
+            },
+            _observationSet(observation){
+                if(!observation){
+                    return;
+                }
+                
+                // create detail info for entity-detail-view
+                this.observationid = this._getID(observation);
+                this.observationdetails = [
+                    { label: "id", value: this._getID(observation), write: false, type: "text" },
+                    { label: "result", value: observation.result, write: false, type: "text" },
+                    { label: "phenomenon time", value: observation.phenomenonTime, write: false, type: "text" },
+                    { label: "result time", value: observation.resultTime, write: false, type: "text" }
+                ]
+
+                // get related entities
+                this.$.entitydatastream.get();
+                this.$.entityfeatureofinterest.get();
+            },
+            _datastreamReceived(datastream){
+                var datastreams = [datastream];
+                this.datastreams = datastreams;
+            },
+            _featureOfInterestReceived(foi){
+                var fois = [foi];
+                this.featuresofinterest = fois;
+            },
+            _rowSelectedDatastream(evt) {
+                this.selecteddatastream = null;                
+                this.selecteddatastream = evt.srcElement;
+            },
+            _rowSelectedFeatureOfInterest(evt){
+                this.selectedfeatureofinterest = null;                
+                this.selectedfeatureofinterest = evt.srcElement;
+            },
+            load(id){
+                if(!this.observation){
+                    this.observationid = id;
+                    this.$.entity.get();
+                }
+            }
+        });
+    </script>
+</dom-module>
