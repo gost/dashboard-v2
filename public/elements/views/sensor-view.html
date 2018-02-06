@@ -131,7 +131,7 @@
                 // get related entities
                 this.$.entitydatastreams.get();
             },
-            _tableDataRequestThings(event) {
+            _tableDataRequestDatastreams(event) {
                 this.datastreamsodata.count = false;
                 this.datastreamsodata.top = event.detail.top;
                 this.datastreamsodata.skip = event.detail.skip;
@@ -142,7 +142,7 @@
                 this.selecteddatastream = evt.srcElement;
             },
             load(id){
-                if(!this.senosr){
+                if(!this.sensor){
                     this.sensorid = id;
                     this.$.entity.get();
                 }

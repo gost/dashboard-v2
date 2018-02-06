@@ -17,6 +17,7 @@
 <link rel="import" href="sensor-view.html" />
 <link rel="import" href="observedproperty-view.html" />
 <link rel="import" href="observation-view.html" />
+<link rel="import" href="featureofinterest-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -63,6 +64,7 @@
       <sensor-view id="sensorview" name="{{pages.sensors.single}}" sensor="{{selectedsensor}}" selecteddatastream="{{selecteddatastream}}"></sensor-view>
       <observedproperty-view id="observedpropertyview" name="{{pages.observedproperties.single}}" observedproperty="{{selectedobservedproperty}}" selecteddatastream="{{selecteddatastream}}"></observedproperty-view>
       <observation-view id="observationview" name="{{pages.observations.single}}" observation="{{selectedobservation}}" selecteddatastream="{{selecteddatastream}}" selectedfeatureofinterest="{{selectedfeatureofinterest}}"></observation-view>
+      <featureofinterest-view id="featureofinterestview" name="{{pages.featuresofinterest.single}}" featureofinterest="{{selectedfeatureofinterest}}" selectedobservation="{{selectedobservation}}"></featureofinterest-view>
     </iron-pages>
 
   </template>
@@ -167,7 +169,7 @@
             break;
           case this.pages.featuresofinterest.array:
             this.$.featuresofinterestview.load();            
-            break;
+            break;          
         }
 
         if(this.selectedtab != this.currententity || evt.type == 'click'){
@@ -196,6 +198,9 @@
             break;
           case this.pages.observations.single:
             this.$.observationview.load(this.currentid);
+            break;
+          case this.pages.featuresofinterest.single:
+            this.$.featureofinterestview.load(this.currentid);
             break;
         }
       },
