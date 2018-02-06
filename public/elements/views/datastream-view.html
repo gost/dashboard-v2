@@ -193,6 +193,14 @@
                     value: '1',
                     observer: '_dropdownValueChanged'
                 },
+                selectedsensor: {
+                    type: Object,
+                    notify: true
+                },
+                selectedobservedproperty: {
+                    type: Object,
+                    notify: true
+                },
 
                 // MQTT 
                 mqttAutoConnect: {
@@ -298,6 +306,14 @@
                 ]
 
                 this.$.mqtt.connect();
+            },
+            _rowSelectedSensor(evt) {
+                this.selectedsensor = null;                
+                this.selectedsensor = evt.srcElement;
+            },
+            _rowSelectedObservedProperty(evt) {
+                this.selectedobservedproperty = null;                
+                this.selectedobservedproperty = evt.srcElement;
             },
             load(id){
                 if(!this.datastream){

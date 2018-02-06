@@ -15,6 +15,7 @@
 <link rel="import" href="historicallocation-view.html" />
 <link rel="import" href="datastream-view.html" />
 <link rel="import" href="sensor-view.html" />
+<link rel="import" href="observedproperty-view.html" />
 
 <dom-module id="entity-browser-view">
   <template>
@@ -57,8 +58,9 @@
       <thing-view id="thingview" name="{{pages.things.single}}" thing="{{selectedthing}}" selecteddatastream="{{selecteddatastream}}"></thing-view>
       <location-view id="locationview" name="{{pages.locations.single}}" location="{{selectedlocation}}" selectedhistoricallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"></location-view>
       <historicallocation-view id="historicallocationview" name="{{pages.historicallocations.single}}" historicallocation="{{selectedhistoricallocation}}" selectedthing="{{selectedthing}}"  selectedlocation="{{selectedlocation}}"></historicallocation-view>
-      <datastream-view id="datastreamview" name="{{pages.datastreams.single}}" datastream="{{selecteddatastream}}"></datastream-view>
-      <sensor-view id="sensorview" name="{{pages.sensors.single}}" sensor="{{selectedsensor}}"></sensor-view>
+      <datastream-view id="datastreamview" name="{{pages.datastreams.single}}" datastream="{{selecteddatastream}}" selectedsensor="{{selectedsensor}}" selectedobservedproperty="{{selectedobservedproperty}}"></datastream-view>
+      <sensor-view id="sensorview" name="{{pages.sensors.single}}" sensor="{{selectedsensor}}" selecteddatastream="{{selecteddatastream}}"></sensor-view>
+      <observedproperty-view id="observedpropertyview" name="{{pages.observedproperties.single}}" observedproperty="{{selectedobservedproperty}}"  selecteddatastream="{{selecteddatastream}}"></observedproperty-view>
     </iron-pages>
 
   </template>
@@ -186,6 +188,9 @@
             break;
           case this.pages.sensors.single:
             this.$.sensorview.load(this.currentid);
+            break;
+          case this.pages.observedproperties.single:
+            this.$.observedpropertyview.load(this.currentid);
             break;
         }
       },

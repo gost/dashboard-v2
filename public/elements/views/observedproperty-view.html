@@ -7,15 +7,15 @@
 <link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
 <link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-datastreams.html">
-<link rel="import" href="../../bower_components/st-core/st-entity-sensor.html">
+<link rel="import" href="../../bower_components/st-core/st-entity-observedproperty.html">
 
 <link rel="import" href="../controls/st-table.html">
 <link rel="import" href="../controls/st-entity-details.html">
 
 <link rel="import" href="../../css/globalstyle.html" />
-<link rel="import" href="sensor-view-styles.html" />
+<link rel="import" href="observedproperty-view-styles.html" />
 
-<dom-module id="sensor-view">
+<dom-module id="observedproperty-view">
     <template>       
         
         <style>       
@@ -39,11 +39,11 @@
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
             <px-card class="card flex__item flex__item--top" header-text="Sensors({{sensorid}})" icon="px-nav:hierarchy">  
-                <st-entity-details details="{{sensordetails}}"></st-entity-details>
+                <st-entity-details details="{{observedpropertydetails}}"></st-entity-details>
             </px-card>     
         </div>   
 
-        <px-card class="card" header-text="Sensors({{sensorid}})/Datastreams" icon="px-nav:hierarchy">
+        <px-card class="card" header-text="ObservedProperty({{observedpropertyid}})/Datastreams" icon="px-nav:hierarchy">
             <st-table 
                 id="table" 
                 arraytype="datastreams" 
@@ -56,10 +56,10 @@
             <st-table>
         </px-card> 
           
-        <st-entity-sensor id="entity" rawreceived="{{sensor}}" gid="{{sensorid}}"></st-entity-sensor>
+        <st-entity-observedproperty id="entity" rawreceived="{{observedproperty}}" gid="{{observedpropertyid}}"></st-entity-observedproperty>
         <st-entity-datastreams 
             id="entitydatastreams" 
-            sensorid="[[sensorid]]" 
+            observedpropertyid="[[observedpropertyid]]" 
             collection="{{datastreams}}" 
             odata="[[datastreamsodata]]" 
             count="{{datastreamscount}}">
@@ -68,18 +68,18 @@
 
     <script>
         Polymer({
-            is: 'sensor-view',
+            is: 'observedproperty-view',
             properties: {
-                sensor: {
+                observedproperty: {
                     type: Object,
                     notify: true,
-                    observer: '_sensorSet'                 
+                    observer: '_observedpropertySet'                 
                 },     
-                sensorid: {
+                observedpropertyid: {
                     type: String,
                     notify: true
                 },    
-                sensordetails: {
+                observedpropertydetails: {
                     type: Array,
                     notify: true,
                     value: []
@@ -116,19 +116,18 @@
             _getID(item){
                 return item['@iot.id'];
             },
-            _sensorSet(sensor){
-                if(!sensor){
+            _observedpropertySet(observedproperty){
+                if(!observedproperty){
                     return;
                 }
                 
                 // create detail info for entity-detail-view
-                this.sensorid = this._getID(sensor);
-                this.sensordetails = [
-                    { label: "id", value: this._getID(sensor), write: false, type: "text" },
-                    { label: "name", value: sensor.name, write: false, type: "text" },
-                    { label: "description", value: sensor.description, write: false, type: "text" },
-                    { label: "encoding type", value: sensor.encodingType, write: false, type: "text" },
-                    { label: "metadata", value: sensor.metadata, write: false, type: "object" },
+                this.observedpropertyid = this._getID(observedproperty);
+                this.observedpropertydetails = [
+                    { label: "id", value: this._getID(observedproperty), write: false, type: "text" },
+                    { label: "name", value: observedproperty.name, write: false, type: "text" },
+                    { label: "description", value: observedproperty.description, write: false, type: "text" },
+                    { label: "definition", value: observedproperty.definition, write: false, type: "text" }                    
                 ]
 
                 // get related entities
@@ -145,8 +144,8 @@
                 this.selecteddatastream = evt.srcElement;
             },
             load(id){
-                if(!this.senosr){
-                    this.sensorid = id;
+                if(!this.observedproperty){
+                    this.observedpropertyid = id;
                     this.$.entity.get();
                 }
             }
