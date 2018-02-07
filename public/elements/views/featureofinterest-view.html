@@ -4,6 +4,10 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-observations.html">
 <link rel="import" href="../../bower_components/st-core/st-entity-featureofinterest.html">
+<link rel="import" href="../../bower_components/px-map/px-map.html">
+<link rel="import" href="../../bower_components/px-map/px-map-tile-layer.html">
+<link rel="import" href="../../bower_components/px-map/px-map-layer-geojson.html">
+<link rel="import" href="../../bower_components/px-map/px-map-control-zoom.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/maps-icons.html">
 
@@ -34,14 +38,34 @@
         </style>   
         <style include="location-view-styles"></style> 
         <style include="globalstyle"></style> 
+
         <div class="flex flex--row flex--spaced flex--wrap flex--top ">
                               
             <px-card class="card flex__item flex__item--top" header-text="FeaturesOfInterest({{featureofinterestid}})" icon="maps:beenhere">  
                 <st-entity-details details="{{featureofinterestdetails}}"></st-entity-details>
-            </px-card>     
+            </px-card>   
+            <px-card class="card flex__item flex__item--top" header-text="Map" icon="maps:map">
+                <div class="flex flex--row flex--spaced flex--wrap flex--top ">
+                    <div class="flex__item flex__item--top" >
+                        <div id="mapwrapper" style="height:400px; width:100%; display:flex" >                
+                            <px-map id="map" zoom="0" lat="0" lng="0" attributionPrefix="" disableAttribution flex-to-size disable-scroll-zoom disable-dragging >
+                                <px-map-control-zoom position='bottomright'></px-map-control-zoom>
+                                <px-map-tile-layer
+                                    url='http://tile.stamen.com/toner/{z}/{x}/{y}.png'>
+                                </px-map-tile-layer>
+                                <px-map-layer-geojson 
+                                    data="[[mapdatafoi]]" 
+                                    feature-style='{"color":"#FA39DD", "fillColor": "#FA39DD", "weight": 8, "opacity": 0.8 , "fillOpacity": 0.8}' 
+                                    show-feature-properties>
+                                </px-map-layer-geojson>
+                            </px-map>
+                        </div>
+                    </div>
+                </div>
+            </px-card>   
         </div>   
 
-        <px-card class="card" header-text="FeaturesOfInterest({{featureofinterestid}})/Observations" icon="icons:timeline">
+        <px-card class="card" header-text="FeaturesOfInterest({{featureofinterestid}})/Observations" icon="icons:visibility">
             <st-table 
                 id="table" 
                 arraytype="observations" 
@@ -84,6 +108,10 @@
                 },
                 observations: {
                     type: Array,
+                    notify: true
+                },            
+                mapdatafoi: {
+                    type: Object,
                     notify: true
                 },
                 observationsodata: {
@@ -129,8 +157,32 @@
                     { label: "feature", value: featureofinterest.feature, write: false, type: "object" },
                 ]
 
+                // show location on map
+                this._setLocationOnMap(featureofinterest);
+                this._mapInit(); 
+
                 // get related entities
                 this.$.entityobservations.get();
+            },
+            _setLocationOnMap(featureofinterest){
+                fc = {
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        id: location['@iot.id'],
+                        properties: {},
+                        geometry: featureofinterest.feature
+                    }]
+                };
+
+                this.mapdatafoi = fc;                
+            },
+            _mapInit(){
+                coordinates = this.featureofinterest.feature.coordinates;
+                this.$.map.lng = coordinates[0];
+                this.$.map.lat = coordinates[1];
+                this.$.map.zoom = 16;
+                this.$.map.invalidateSize();
             },
             _tableDataRequestObservations(event) {
                 this.observationsodata.count = false;
